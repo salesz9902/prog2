@@ -1,0 +1,179 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Welch!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+    <section>
+        <title>Első osztályom</title>
+        <para>
+            Valósítsd meg C++-ban és Java-ban az módosított polártranszformációs algoritmust! A matek háttér 
+            teljesen irreleváns, csak annyiban érdekes, hogy az algoritmus egy számítása során két normálist
+            számol ki, az egyiket elspájzolod és egy további logikai taggal az osztályban jelzed, hogy van vagy
+            nincs eltéve kiszámolt szám.
+        </para>
+        <para>
+            Megoldás forrása:                
+        </para>
+        <screen>
+        <![CDATA[$ /java/bin/java polargen.java
+        -0.7353431820414118
+        -0.33784190028284766
+        0.7750031835316805
+        0.5524713543467192
+        -0.5380423283211784
+        1.512849268596637
+        2.7148874695500966
+        -0.23688836801277952
+        -0.3238588036816322
+        -0.7963150809415576
+        $ /java/bin/java polargen.java
+        -0.6566325405553158
+        0.40465899229436114
+        0.08634239512228409
+        -0.9470321445590416
+        0.1926238606249351
+        0.7705517022243931
+        0.9084531239664848
+        -1.4472688950554047
+        -1.6250659297425345
+        -0.7791586500972545]]>
+		</screen>
+		<para>
+			A program 10 darab véletlenszerűen generált normalizált számot köp ki, ahogyan
+			azt várjuk is.
+</para>               
+    </section>        
+
+    <section>
+        <title>LZW</title>
+        <para>
+            Valósítsd meg C-ben az LZW algoritmus fa-építését!
+        </para>
+        <para>
+            Megoldás forrása:    <link xlink:href="https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp">https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp</link>            
+        </para>
+        <para>
+            Van egy osztályunk: LZWBinFa, ez építi fel a bináris fájlunkat az általunk beírt bemeneti fájlból.
+            A következőképp kell futtatnunk a kódot: 
+        </para>
+        <para>
+            <code>./bin [bemeneti] -o [kimeneti]</code>
+        </para>
+        <para>
+            A kimeneti fájlhoz értelemszerűen megadjuk, hova szeretnénk kiíratni az eredményt.
+        </para>
+        <para>
+            A programunk sokkal egyszerűbb módon van megírva C-ben. Ugyanis itt már eléggé meg van kötve a kezünk a program 
+            írásában. Mondhatjuk, hogy ugyanaz a programkód, csak leegyszerűsítve, pár dolgot kivéve az eredeti c++ kódunkból.
+        </para>
+    </section>        
+        
+    <section>
+        <title>Fabejárás</title>
+        <para>
+            Járd be az előző (inorder bejárású) fát pre- és posztorder is!
+        </para>
+        <para>
+            Megoldás forrása:   <link xlink:href="https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp">https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp</link>             
+        </para>
+        <para>
+                Inorder: először a fa bal oldalát járjuk be, a gyökeret, aztán majd a jobb oldalát.
+        </para>
+        <para>
+                Preorder: gyökérrel indítunk, majd bejárjuk fa bal oldalát, aztán a fa jobb oldalát.
+        </para>
+        <para>
+                Postorder: gyökérrel indítunk, fa jobb oldalát, aztán a fa bal oldalát járjuk be.
+        </para>
+        <para>
+            Itt már viszont a programot picit másképpen futtatjuk:
+        </para>
+        <para>
+            <code>./binfa [bemeneti] -o [kimeneti] [o / r]</code>
+        </para>
+        <para>
+            Ha az utolsó argumentum o, postorder, ha pedig r, akkor inorder bejárást fog alkalmazni.
+        </para>
+        
+        
+    </section>        
+                        
+    <section>
+        <title>Tag a gyökér</title>
+        <para>
+            Az LZW algoritmust ültesd át egy C++ osztályba, legyen egy Tree és egy beágyazott Node
+            osztálya. A gyökér csomópont legyen kompozícióban a fával!
+        </para>
+        <para>
+            Megoldás forrása:    <link xlink:href="https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp">https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp</link>             
+        </para>
+        <para>
+            Itt az alapvetően C alapú LZWBinFa programkódunkat kellene átírni C++-ba. Ez nem feltétlenül bonyolult feladat.
+            Mivel már el kell mozdulnunk picit az objektumorientált irányba, így egy külön osztályba kell megírnunk a fent 
+            említett dolgokat.
+        </para>
+    </section>        
+                
+    <section>
+        <title>Mutató a gyökér</title>
+        <para>
+            Írd át az előző forrást, hogy a gyökér csomópont ne kompozícióban, csak aggregációban legyen a 
+            fával!
+        </para>
+        <para>
+            Megoldás forrása:  <link xlink:href="https://github.com/salesz9902/textbook/blob/master/files/welch/mutato_a_gyok.cpp">https://github.com/salesz9902/textbook/blob/master/files/welch/mutato_a_gyok.cpp</link> 
+        </para>
+        <para>
+            Ebben az esetben a bináris fa gyökere egy mutató kell, hogy legyen. Ez semmit sem változtat a többi, vagy akár 
+            az eredeti LZWBinFa-hoz képest. Ugyanaz a végkimenetele, minden ugyanúgy működik, csak szimplán másképp van 
+            megoldva.
+        </para>
+    </section>                     
+
+    <section>
+        <title>Mozgató szemantika</title>
+        <para>
+            Írj az előző programhoz mozgató konstruktort és értékadást, a mozgató konstruktor legyen a mozgató
+            értékadásra alapozva!
+        </para>
+        <para>
+            Megoldás forrása:  <link xlink:href="https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp">https://github.com/salesz9902/textbook/blob/master/files/welch/z3a7.cpp</link> 
+        </para>
+        <para>
+            Itt használjuk a mozgató-konstruktorokat. A következő változásoknak kell végbemenniük a kódunkban:
+        </para>
+            <programlisting language="C++">
+        <![CDATA[Csomopont *  masol ( Csomopont * elem, Csomopont * regifa ) {
+        Csomopont * ujelem = NULL;
+        if ( elem != NULL ) {
+       switch (elem->getBetu()) {
+       case '/':
+               ujelem = new Csomopont ( '/' );
+               break;
+       case '0':
+               ujelem = new Csomopont ( '1' );
+               break;
+       case '1':
+               ujelem = new Csomopont ( '0' );
+               break;
+       default:
+               std::cerr<<"HIBA!"<<std::endl;
+               break;
+       }
+       ujelem->ujEgyesGyermek(
+               masol(elem->egyesGyermek(), regifa)
+       );
+       ujelem->ujNullasGyermek(
+               masol(elem->nullasGyermek(), regifa)
+       );
+       if ( regifa == elem )
+            fa = ujelem;
+        }
+        return ujelem;
+        }]]>
+            </programlisting>
+    </section>                     
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

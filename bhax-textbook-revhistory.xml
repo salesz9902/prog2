@@ -1,0 +1,237 @@
+<revhistory xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <revision>
+        <revnumber>0.0.1</revnumber>
+        <date>2019-02-12</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Az iniciális dokumentum szerkezetének kialakítása.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.2</revnumber>
+        <date>2019-02-14</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Inciális feladatlisták összeállítása.
+        </revremark>
+    </revision>    
+    <revision>
+        <revnumber>0.0.3</revnumber>
+        <date>2019-02-16</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Feladatlisták folytatása.
+            Feltöltés a BHAX csatorna 
+            <link xlink:href="https://gitlab.com/nbatfai/bhax">https://gitlab.com/nbatfai/bhax</link>
+            repójába.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.4</revnumber>
+        <date>2019-02-19</date>
+        <authorinitials>nbatfai</authorinitials>
+        <revremark>
+            Aktualizálás, javítások.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.5</revnumber>
+        <date>2019-02-23</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Turing feladatok megoldásának megkezdése.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.6</revnumber>
+        <date>2019-02-27</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+             A Turing nagyjából készen van. Ismerkedés a Chomsky-val.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.7</revnumber>
+        <date>2019-03-02</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Turing befejezése. Chomsky feladatainak elkezdése.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.8</revnumber>
+        <date>2019-03-03</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Chomsky nagyjából készen van.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.0.9</revnumber>
+        <date>2019-03-04</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Ismerkedés a Caesar feladatsorral.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.0</revnumber>
+        <date>2019-03-08</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Caesarban lévő programok kipróbálása, elmélkedés. Enyhén elkezdve.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.1</revnumber>
+        <date>2019-03-08</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Caesarban lévő programok kipróbálása, elmélkedés. Enyhén elkezdve.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.2</revnumber>
+        <date>2019-03-10</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Chomsky teljesen befejezve. Caesar nagyjából készen van.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.3</revnumber>
+        <date>2019-03-11</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Ismerkedés a Mandelbrot fejezettel.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.4</revnumber>
+        <date>2019-03-16</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Belekezdés a Mandelbrotba.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.5</revnumber>
+        <date>2019-03-17</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Mandelbrot nagyjából készen van. Bár még hiányos.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.6</revnumber>
+        <date>2019-03-18</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Ismerkedés a Welch fejezettel.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.7</revnumber>
+        <date>2019-03-24</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Teljes gőzerővel neki a Welchnek. Nagyjából készen van.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.8</revnumber>
+        <date>2019-03-25</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Ismerkedés a Conway fejezettel.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.1.9</revnumber>
+        <date>2019-03-30</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Conway fejezet megkezdése. Nagyjából kész, bár hiányos.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.0</revnumber>
+        <date>2019-04-01</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Ismerkedés a Schwarzenegger fejezettel.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.1</revnumber>
+        <date>2019-04-05</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Mandelbrot teljesen készen van. Conway elmélkedés, utánaolvasás.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.2</revnumber>
+        <date>2019-04-08</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Ismerkedés a Chaitin fejezettel.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.3</revnumber>
+        <date>2019-04-20</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Csiszolgatás a feladatokon, olvasónaplók írása folyamatban.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.4</revnumber>
+        <date>2019-04-28</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Utolsó finomítgatások, csiszolgatások a feladatokon visszamenőleg.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.5</revnumber>
+        <date>2019-04-29</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Sikertelen védés. Binfa újratanulmányozása, feladatok átnézése.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.6</revnumber>
+        <date>2019-05-01</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Git kezelésének megtanulása linuxon. Innentől kezdve ilyen módon megy a commitolás, pusholás.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.7</revnumber>
+        <date>2019-05-06</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            Sikeres védés a Hibavisszaterjesztéses perceptron feladatból.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.8</revnumber>
+        <date>2019-05-07</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            További csiszolások a feladatokon. Képek beillesztése pár feladathoz.
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>0.2.9</revnumber>
+        <date>2019-05-09</date>
+        <authorinitials>salesz9902</authorinitials>
+        <revremark>
+            A könyv végleges befejezése, leadható állapotba hozása.
+        </revremark>
+    </revision>
+</revhistory>
