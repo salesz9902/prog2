@@ -1,0 +1,257 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Arroway!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>OO szemlélet</title>
+        <para>
+            A módosított polártranszformációs normális generátor beprogramozása Java nyelven. Mutassunk rá,
+            hogy a mi természetes saját megoldásunk (az algoritmus egyszerre két normálist állít elő, kell egy
+            példánytag, amely a nem visszaadottat tárolja és egy logikai tag, hogy van-e tárolt vagy futtatni kell
+            az algot.) és az OpenJDK, Oracle JDK-ban a Sun által adott OO szervezés ua.!
+        </para>
+        <para>
+            Megoldás forrása:
+            <programlisting language="java">
+                <![CDATA[
+                class PolarGen {
+
+                boolean stored = false;
+                double val;
+
+                public PolarGen() {
+                    stored = false;
+                }
+
+                public double next() {
+                    if ( ! stored) {
+                        double u1, u2, v1, v2, w;
+                        do {
+                            u1 = Math.random();
+                            u2 = Math.random();
+                            v1 = 2 * u1 - 1;
+                            v2 = 2 * u2 - 1;
+                            w = v1 * v1 + v2 * v2;
+                        } while (w > 1);
+                        double r = Math.sqrt((-2 * Math.log(w)) / w);
+                        val = r * v2;
+                        stored = ! stored;
+                        return r * v1;
+                    } else {
+                        stored = ! stored;
+                        return val;
+                    }
+                }
+
+                public static void main(String[] args) {
+                    PolarGen g = new PolarGen();
+
+                    for (int i=0; i < 10; i++)
+                        System.out.println(g.next());
+                }
+            }
+            ]]>
+            </programlisting>               
+        </para>
+        <para>
+            A polártranszformációs generátor pszeudo-random számok generálására lett kitalálva. Itt kettő pszeudo-random 
+            szám jön létre a lefutás során, így elegendő az előzőleg generáltakból a másodikat visszaadni.
+        </para>
+        <para>
+            Ennek a feladatnak a megoldásához csak egy osztályt kell írnunk, amely képes kezelni a megadott képleteket. Nekünk szinte egyáltalán nincs szükségünk
+            matematikai háttérre. Feladatunk: van egy matematikai feladat (amivel igázából nem sokat kell foglalkoznunk, mert csak bemásoljuk a képleteket),
+            írunk hozzá egy osztályt, amely képes kezelni azt.
+        </para>
+    </section>        
+
+    <section>
+        <title>Homokozó, Binfa program elkészítése Java-ban</title>
+        <para>
+            Írjuk át az első védési programot (LZW binfa) C++ nyelvről Java nyelvre, ugyanúgy működjön!
+            Mutassunk rá, hogy gyakorlatilag a pointereket és referenciákat kell kiirtani és minden máris működik
+            (erre utal a feladat neve, hogy Java-ban minden referencia, nincs választás, hogy mondjuk egy
+            attribútum pointer, referencia vagy tagként tartalmazott legyen).
+        </para>
+        <para>
+            Megoldás forrása:   
+            <programlisting language="java">
+                <![CDATA[
+                class LZWBinFa {
+
+                public LZWBinFa() {
+                  fa = gyoker;
+                }
+
+                public void egyBitFeldolg(char b) {
+                  if (b == '0') {
+
+                    if (fa.nullasGyermek() == null) {
+                          Csomopont uj = new Csomopont('0');
+                          fa.ujNullasGyermek(uj);
+                          fa = gyoker;
+                    } else {
+                          fa = fa.nullasGyermek();
+                    }
+
+                  } else {
+
+                    if (fa.egyesGyermek() == null) {
+                          Csomopont uj = new Csomopont('1');
+                          fa.ujEgyesGyermek(uj);
+                          fa = gyoker;
+                    } else {
+                          fa = fa.egyesGyermek();
+                    }
+
+                  }
+                }
+                ]]>
+            </programlisting>             
+        </para>
+        <para>
+            A java nyelvnek van egy olyan tulajdonsága, hogy minden referencia és így nem kell vacillálnunk, hogy pointert vagy referenciát használjunk.
+            Ennek köszönhetően C++-os programunkból eltávolíthatjuk a pointereket jelző csillagot(*), programunk ugyanúgy fog működni.
+        </para>
+        <para>
+            A fordítónk millió hibák jelzésének elkerülése érdekében még fordítás előtt érdemes a pontosvesszők eltávolítása az osztályok és metódusaik végéről.
+            A fájlkezeléshez szükséges metódus és típuscserék után kész is a Java-s verzió.
+        </para>
+        <para>
+            Gyakorlatvezetőm ajánlásával Tomcat-et használtam saját szerver létrehozására a Servletbe való beépítéshez.
+            <link xlink:href="https://linuxize.com/post/how-to-install-tomcat-9-on-ubuntu-18-04/">Ezen a linken</link> leírást kapsz arról, hogyan telepítsd a Tomcatet
+            (Ubuntu esetében).
+        </para>
+        
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/tomcat.jpg"/>
+            </imageobject>
+            
+            <caption>
+                <para>Ubuntu linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        
+    </section> 
+    
+    <section>
+        <title>"Gagyi"</title>
+        <para>
+            Az ismert formális <code language="C"><![CDATA[while (x <= t && x >= t && t != x);]]></code> tesztkérdéstípusra adj a szokásosnál
+            (miszerint x, t az egyik esetben az objektum által hordozott érték, a másikban meg az objektum
+            referenciája) „mélyebb” választ, írj Java példaprogramot mely egyszer végtelen ciklus, más x, t
+            értékekkel meg nem! A példát építsd a JDK Integer.java forrására3, hogy a 128-nál inkluzív objektum
+            példányokat poolozza!
+        </para>
+        <para>
+            Megoldás forrása: 
+            <programlisting language="java">
+                <![CDATA[
+                import java.lang.Number;
+
+                class Gagyi {
+                    public static void main(String[] args) {
+
+                        Integer st = 140, nd = 140;
+
+                        while (st <= nd && st >= nd && st != nd)
+                            System.out.println("running...");
+                    }
+                }
+                ]]>
+            </programlisting>   
+        </para>
+        <para>
+            Az ismert formális tesztkérdéstípusban a következőt láthatjuk:
+        </para>
+        <para>
+            Ha <code>x</code> kisebb vagy egyenlő mint <code>t</code>
+        </para>
+        <para>
+            és <code>x</code> nagyobb vagy egyenlő mint <code>t</code>
+        </para>
+        <para>
+            és <code>t</code> nem egyenlő <code>x</code>
+        </para>
+        <para>
+            Látható a változók deklarálásánál, hogy az adott érték 127-tól nagyobb. Így a while ciklusunknál minden feltételünk igaz lesz.
+            Azért fog mind a 3 feltételünk igazat visszakapni, mert más memóriacímük, annak ellenére, hogy egyeznek az értékeik.
+            Tehát így értelemszerűen egy végtelen ciklusba fogunk torkollani, ami az alábbi képen látható is.
+        </para>
+        
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/gagyi.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Ubuntu linux screenshot</para>
+            </caption>
+            
+        </mediaobject> 
+    </section>  
+    
+    <section>
+        <title>Yoda</title>
+        <para>
+            Írjunk olyan Java programot, ami java.lang.NullPointerEx-el leáll, ha nem követjük a Yoda
+            conditions-t! <link xlink:href="https://en.wikipedia.org/wiki/Yoda_conditions">https://en.wikipedia.org/wiki/Yoda_conditions</link>
+        </para>
+        <para>
+            Megoldás forrása:  
+         
+            <programlisting language="java">
+                <![CDATA[
+                class Yoda {
+                    public static void main(String[] args) {
+                        int lightsaber = 2923;  // 2FF923 is the green lightsaber's color code
+                                                // so if we skip the characters, we get 2923..
+                        if(2923 = lightsaber) {
+                            // compile error
+                        }
+                    }
+                }
+                ]]>
+            </programlisting>             
+        </para> 
+        <para>
+            A Yoda condition egy programozási stílus, elnevezését az ismert Star Wars szereplője, Yoda nem-szabványos beszéde adta. Ez programunkban 
+            úgy észlelhető, hogy például egy if-ben a feltételünk bal oldalára írjuk az értéket. (ld. megoldás forrásánál)
+        </para>
+    </section>  
+
+    
+    <section>
+        <title>Kódolás from scratch</title>
+        <para>
+            Induljunk ki ebből a tudományos közleményből: <link xlink:href= "http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/bbpalg.pdf"> http://crd-legacy.lbl.gov/~dhbailey/dhbpapers/bbpalg.pdf </link>
+            és csak ezt tanulmányozva írjuk meg Java nyelven a BBP algoritmus megvalósítását!
+        </para>
+        <para>
+            Megoldás forrása:              
+        </para>
+        <para>
+            Ebben a példában Bátfai Tanár Úr kódját használtam, időhiány miatt.
+        </para>
+        <para>
+            A BBP rövidítés a "Bailey-Borwein-Plouffe"-ból ered, ami egy olyan algoritmus amely igen megközelítőleg kiszámítja nekünk a pi értékét.
+            1995-ben lett felfedezve, 1996-ban publikálva.
+        </para>
+        <para>
+            Tetszőleges kiindulási helyzetből indulva bináris és hexadecimális számjegyeit számolja ki Pi-nek.
+        </para>
+        <para>
+            <link xlink:href="https://www.davidhbailey.com//dhbpapers/bbp-alg.pdf">Eme tudományos közlemény</link> 
+            segít megérteni a BBP algoritmus működését, és ennek segítségével sokkal gördülékenyebben megírhatjuk programunkat.
+        </para>
+    </section>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

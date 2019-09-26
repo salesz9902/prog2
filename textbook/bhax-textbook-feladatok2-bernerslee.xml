@@ -1,0 +1,109 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Berners-Lee!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>Olvasónapló: C++: Benedek Zoltán, Levendovszky Tihamér Szoftverfejlesztés C++ nyelven és 
+            Java: Nyékyné Dr. Gaizler Judit et al. Java 2 útikalauz programozóknak 5.0 I--II.II.</title>
+        <para>
+           
+        </para>
+        <para>
+            Bár mind a C++ és Java programozási nyelv magas szintű programozási nyelv, illetve támogatja az 
+            objektumorientáltságot, mégis találunk nagyobb eltéréseket a nyelvek összehasonlítása során.
+        </para>
+        <para>
+        A Java erősen osztály alapú és objektumorientált nyelv. Az egyik legjobban eltérő dolog a két nyelv 
+            között a hordozhatóság. Ez alatt azt értem, hogy ha egy C++ kódot lefordítok egy linux rendszeren, 
+            nem feltétlenül fog lefutni egy másik linux disztribúción.
+            Ez azért van, mert a C++ gépi kódot fog előállítani fordításnál. 
+            Ezzel szemben a Java esetében egy saját virtuális géppel (JVM) fordítja a kódokat, és itt mutatkozik meg 
+            a hordozhatóság fogalma, hiszen, bármilyen rendszeren, ahol fent van a JVM, le fog futni a fordított kódunk.
+        </para>
+        <para>
+           Másik különbség a két nyelv között az, hogy a C++-ban főleg pointerekkel (mutatókkal) dolgozunk, addig Java-ban ez referenciaként lesz jelen.
+            Tehát Java-ban nincsenek mutatók, de C++-ban van referencia és mutató is.
+        </para>
+        <para>
+           A két nyelv szintaktikában is elég erősen eltér. Nézzünk meg egy egyszerű kiíratást C++-ban:
+        </para>
+        <programlisting language="c++">
+        <![CDATA[
+        std::cout << b.x << std::endl;
+	]]>
+        </programlisting>
+        <para>
+            Java-ban:
+        </para>
+        <programlisting language="java">
+        <![CDATA[
+        System.out.println(b.x);
+	]]>
+        </programlisting>
+    </section>     
+    
+       <section>
+        <title>Olvasónapló: Python: Forstner Bertalan, Ekler Péter, Kelényi Imre: Bevezetés a mobilprogramozásba.
+            Gyors prototípus-fejlesztés Python és Java nyelven (35-51 oldal)</title>
+        <para>
+           Személy szerint nagyon tetszik a Python nyelv, bár eddig is tudtam róla pár dolgot, hisz láttam már python kódot, de most az alapokba jobban belelátva 
+            nőtt a nyelv iránti szimpátiám...
+        </para>
+        <para>
+            Nagyon egyszerű, dinamikus és erősen magas szintű programozási nyelv. Nagyon tetszik a behúzásalapú szintaxisa a nyelvnek. Már-már annyira egyszerű, hogy ennél egyszerűbbet 
+            nem is nagyon tudok elképzelni, hogy az ne menjen a kód olvasásának és érthetőségének rovására. Szintén jó, hogy ezáltal sokkal tömörebben lekódolhatunk dolgokat, 
+            mint pl. Java-ban vagy C++-ban, és még olvasható is annak ellenére, hogy rövidebb a programkódunk.
+        </para>
+        <para>
+            Ami szintén erősen elnyerte a tetszésemet, hogy egy scriptnyelvben konkrétan ennyi mindent el tudunk érni, ráadásul ugyanúgy futtatjuk kódjainkat, akár egy bash scriptet, 
+            nincs szükség linkelni/fordítani azokat.
+        </para>
+        <para>
+            A változóknak nincs konkrét típusa, ez szintén egy teljesen jó pont szerintem. Hiszen a nyelv "maga dönti el", hogy milyen típusú változót használ az adott értékre. Szerintem ez 
+            rövidtávon megszokható és komfortos élményt ad vissza. 
+        </para>
+        <para>
+            Tök jó, hogy Python-ban többfélét is választhatunk szekvenciák, avagy gyüjtők között. Szekvenciák például a sztring, ennes és a lista. Aztán ott van még a szótár is, ami kulcsokkal 
+            azonosított elemek rendezetlen halmaza, ahol a kulcs bármilyen típusú lehet.
+        </para>
+        <para>
+            Pár példa az ennesekre (tuples):
+        </para>
+        <para>
+            Ennes (tuple) szintaxisa:
+        </para>
+        <programlisting language="python">
+        <![CDATA[
+        ('a', 'b', 'c')     # ez egy három elemű ennes
+        tuple('abc')        # tuple generálás kulcsszóval
+        ()                  # ez egy üres ennes 
+	]]>
+        </programlisting>
+        <para>
+            Lista szintaxisa:
+        </para>
+            <programlisting language="python">
+        <![CDATA[
+        ['a', 'b', 'c']     # lista, hasonló a tuple-höz, csak itt []-t használunk
+        list('abc')         # itt szintén listát generálunk kulcsszóval
+	]]>
+        </programlisting>
+        
+        <para>
+            Szótár szintaxisa:
+        </para>
+        <programlisting language="python">
+        <![CDATA[
+        {'a':1, 'b':5, 'e':1982}    # így néz ki egy szótár
+        {}                          # ez pedig egy üres szótár
+	]]>
+        </programlisting>
+    </section>    
+     
+        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
