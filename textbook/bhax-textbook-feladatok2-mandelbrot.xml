@@ -1,0 +1,173 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Mandelbrot!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>Reverse engineering UML osztálydiagram</title>
+        <para>
+            UML osztálydiagram rajzolása az első védési C++ programhoz. Az osztálydiagramot a forrásokból
+            generáljuk (pl. Argo UML, Umbrello, Eclipse UML) Mutassunk rá a kompozíció és aggregáció
+            kapcsolatára a forráskódban és a diagramon, lásd még: https://youtu.be/Td_nlERlEOs.
+        </para>
+        <para>
+            Megoldás forrása:              
+            </para>
+            <para>
+                Az UML a Unified Modeling Language rövidítése. Ahogy a nevében is láthatjuk, ez egy szabványos modellező nyelv.
+                Szöveges és grafikus modelleket tudunk vele készíteni. Sokféle folyamatokról készíthetünk UML modellt, ugyanakkor szoftverekről 
+                és programokról, sőt még adatbázisokról is készíthetünk. Bizonyos cégeknél ez egy kifejezetten hatékony kommunikációs eszközként 
+                van jelen. Segíti az együttműködést, bizonyos dolgok felvázolását, könyebbé téve annak megérthetőségét. 
+            </para>
+            <para>
+                Ebben a feladatban a jó öreg binfa programunkat fogjuk lemodellezni UML-ben. Ehhez az Eclipse UML-t fogom használni, amely képes 
+                osztálydiagramot generálni programkódunkból.
+            </para>
+            <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/umbrello_uml.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        </section>        
+
+        <section>
+            <title>Forward engineering UML osztálydiagram</title>
+            <para>
+                UML-ben tervezzünk osztályokat és generáljunk belőle forrást!
+            </para>
+        <para>
+            Ebben a feladatban csakúgy, mint az előzőben is az Umbrello nevezetű programot használtam.
+        </para>
+        <para>
+            Ugyanaz a felállás, csakmost egy kisebb, saját elképzelt programkódból hozzuk létre modellünket. Esetemben 
+            ahogy a modellből is kivehető, egy háromszög kerület/terület programról van szó. Létrehoztam 3 változót, értelemszerűen 
+            a háromszög 3 oldala lesz ez (a, b, c), aztán két külön függvényt, egyik kerületet, másik területet számol.
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="../pictures/test_class.png" scale="60"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+    </section> 
+    
+    <section>
+        <title>Egy esettan</title>
+        <para>
+            A BME-s C++ tankönyv 14. fejezetét (427-444 elmélet, 445-469 az esettan) dolgozzuk fel!
+        </para>
+        <para>
+            Megoldás forrása: 
+            <programlisting language="c++">
+                <![CDATA[
+                    //File: product.h
+                    #ifndef PRODUCT_H
+                    #define PRODUCT_H
+                    
+                    #include <iostream>
+                    #include <ctime>
+                    
+                    class Product
+                    {
+                    protected:
+                        int initialPrice;   // Beszerzési ár
+                        time_t dateOfAcquisition; // Beszerzés dátuma
+                        std::string name; // Név
+                        virtual void printParams(std::ostream& os) const;
+                        virtual void loadParamsFromStream(std::istream& is);
+                        virtual void writeParamsToStream(std::ostream& os) const;
+                    public:
+                        Product();
+                        Product(std::string name, int initialPrice, time_t dateOfAcquisition);
+                        virtual ~Product(); {};
+                        int GetInitialPrice const;
+                        std::string GetName() const;
+                        time_t GetDateOfAcquisition() const;
+                        int GetAge() const;
+                        virtual int GetCurrentPrice() const;
+                        void Print(std::ostream& os) const;
+                        virtual std::string GetType() const = 0;
+                        virtual char GetCharCode() const = 0;
+                        friend std::istream& operator>>(std::istream& is, Product& product);
+                        friend std::ostream& operator>>(std::ostream& os, const Product& product);
+                        };
+                        #endif /* PRODUCT_H */
+                ]]>
+            </programlisting>   
+        </para>
+        <para>
+            A könyv 14. fejezetében egy esettanulmány során kaphattunk betekintést a C++ különböző nyelvi elemeibe, melynek fő témája 
+            az öröklés és a virtuális függvények megfelelő alkalmazása.
+        </para>
+        <para>
+            Fejezetünk első részében egy számítógép-alkatrész és konfiguráció értékesítő kereskedésnek készítünk egy olyan alkalmazást, 
+            amely lehetőséget biztosít eme eszközök nyilvántartására, persze ezt úgy oldjuk meg, hogy később könnyen módosítható legyen új 
+            termékcsaládok bevezetésére is. Tehát konkrétan egy keretrendszert hozunk létre erre a célra.
+        </para>
+        <para>
+            A termékek reprezentálására egy Product nevű osztályt tartunk fent. Ebbe van az összes termékre vonatkozó közös kódunk. Tehát a 
+            keretrendszer a Product osztályon alapul.
+        </para>
+    </section>  
+    
+    <section>
+        <title>BPMN</title>
+        <para>
+            Rajzoljunk le egy tevékenységet BPMN-ben!
+            <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf">https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_7.pdf</link> (34-47 fólia)
+        </para>
+        <para>
+        <emphasis role='strong'>A feladat megoldásában Győri Márk Patrik tutorált!</emphasis>
+        </para>
+        <para>
+            Ebben a feladatban egy valós eseményt kellett lealgoritmizálnunk, ha úgy tetszik folyamatábrával ábrázolnunk.
+        </para>
+        <para>
+            Személy szerint már középiskolában is volt szerencsém folyamatábrázni. Nagyon szerettem. Jelen esetben egy bankkártyás elfogadórendszer 
+            egy kis részét modelleztem le. Ehhez a Google draw.io felületét használtam. Azért erre esett a választás, mert ennek kezelése tűnt számomra 
+            a legkézenállóbbnak. A végeredményt lásd a képen:
+        </para>
+        <mediaobject>
+            <imageobject>
+                <imagedata fileref="../pictures/bpmn_drawio.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+    </section>  
+
+    
+    <section>
+        <title>Tex UML</title>
+        <para>
+            Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az OOCWC projektről (pl.
+            use case és class diagramokat).
+        </para>
+        <para>
+            A feladat megoldásához a plantuml-t használtam. 
+            Ez pontosabban a plantuml nevezetű eclipse plugin, ami a kód beimportálása után generálja le modellünket a forráskódunkból.
+        </para>
+        <para>
+            Ez a generátor az OOCWC projektnél sajnos hamar hibát fog nekünk jelezni bármelyik osztály generálásánál. Hiszen valamiért az 
+            override miatt hibába fut.
+        </para>
+    </section>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
