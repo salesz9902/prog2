@@ -1,0 +1,297 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Liskov!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>Liskov helyettesítés sértése</title>
+        <para>
+            Írjunk olyan OO, leforduló Java és C++ kódcsipetet, amely megsérti a Liskov elvet! Mutassunk rá a
+            megoldásra: jobb OO tervezés.
+        </para>
+        <para>
+            <emphasis role='strong'>A feladat megoldásában Szilágyi Csaba tutorált!</emphasis>
+        </para>
+        <para>
+            Megoldás forrása:
+            <programlisting language="java">
+                <![CDATA[
+                class liskov_example{
+
+                    public static void main (String[] args){
+
+                        Program program = new Program();
+                        Hal hal = new Hal();
+                        program.vizsgal(hal);
+
+                        FeherCapa fehercapa = new FeherCapa();
+                        program.vizsgal(fehercapa);
+
+                        Balna balna = new Balna();
+                        program.vizsgal(balna);
+                        }
+                    }
+
+                    class Hal{
+                    public
+                        void uszik(){
+                        System.out.println("hal");
+                        }
+                    }
+
+                    class Program{
+                    public
+                        void vizsgal(Hal hal){
+                        hal.uszik();
+                        }
+                    }
+
+                    class FeherCapa extends Hal{}
+
+                    class Balna extends Hal{}
+                ]]>
+                </programlisting>               
+            </para>
+            <para>
+                A liskov-helyettesítési elvet Robert C. Martin alkotta meg. Része a S.O.L.I.D alapelveknek.
+            </para>
+            <para>
+                A liskov elv azt mondja ki, hogy ha P altípusa K-nak, és mindenhol, ahol K-t felhasználjuk, ugyanúgy, 
+                P-t is fel tudjuk használni anélkül, hogy a program másképpen viselkedne. 
+            </para>
+            <para>
+                A fenti feladat jól demonstrálja a helyzetet. Az a kontextus, hogy attól még, hogy valami tud úszni nem biztos, hogy hal.
+                A lenti képen pedig láthatjuk, hogy fordul és fut a programunk.
+            </para>
+            <para>
+                A Liskov-elv ott lesz megsértve, hogy ugyebár a cápa és a bálna is úsznak, de nem mindkettő hal lesz, ugyanis amíg a cápa
+                a halak osztályába, a bálna az emlősökébe tartozik.
+            </para>
+             <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/liskov.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Ubuntu linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        </section>        
+
+        <section>
+            <title>Szülő-gyerek</title>
+            <para>
+                Írjunk Szülő-gyerek Java és C++ osztálydefiníciót, amelyben demonstrálni tudjuk, hogy az ősön
+                keresztül csak az ős üzenetei küldhetőek!
+            </para>
+            <para>
+                Megoldás forrása:   
+                <programlisting language="java">
+                    <![CDATA[
+                    public class ParentChild {
+                        public static void main(String[] args) {
+                            Parent parent = new Child();
+                            parent.output();
+                        }
+                    }
+
+                    class Parent {}
+
+                    class Child extends Parent{
+                        public void output() {
+                            System.out.println("Child");
+                        }
+                    }
+                    ]]>
+            </programlisting>             
+        </para>
+        <para>
+            A fenti kód demonstrálja, hogyan is nézne ki egy szülő-gyerek kompozíció java-ban.
+        </para>
+        <para>
+            Mint láthatjuk, van egy üres szülő osztályunk, aztán lentebb a belőle származtatott gyerek osztály.
+            Ott egy metódusban kiíratunk valamit. Aztán a main függvényünkben szülő típusú új gyerek objektumot hozunk létre.
+            Aztán a szülő (osztály) típusú "változónkon" keresztül íratjuk ki a metódusunkat.
+        </para>
+        <para>
+            Itt tehát a polimorfizmust használjuk a szülő osztállyal való új gyerek osztály típusú objektum létrehozására.
+        </para>
+        <para>
+            Tehát a szülő nem képes meghívni gyermeke metódusát, amit ő nem definiált...
+        </para>
+    </section> 
+    
+    <section>
+        <title>Anti OO</title>
+        <para>
+            A BBP algoritmussal<superscript>4</superscript> a Pi hexadecimális kifejtésének a 0. pozíciótól számított 10<superscript>6</superscript>, 10<superscript>7</superscript>, 10<superscript>8</superscript> darab
+            jegyét határozzuk meg C, C++, Java és C# nyelveken és vessük össze a futási időket!
+            <link xlink:href="https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/apas03.html#id561066">https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/apas03.html#id561066</link>
+        </para>
+        <para>
+            Megoldás forrása: 
+            <programlisting language="java">
+                <![CDATA[
+                       for(int d=10000000; d<10000001; ++d) {
+
+                           d16Pi = 0.0d;
+
+                           d16S1t = d16Sj(d, 1);
+                           d16S4t = d16Sj(d, 4);
+                           d16S5t = d16Sj(d, 5);
+                           d16S6t = d16Sj(d, 6);
+
+                           d16Pi = 4.0d*d16S1t - 2.0d*d16S4t - d16S5t - d16S6t;
+
+                           d16Pi = d16Pi - Math.floor(d16Pi);
+
+                           jegy = (int)Math.floor(16.0d*d16Pi);
+
+                       }
+                ]]>
+            </programlisting>   
+        </para>
+        <para>
+            Ebben a feladatban teszteltük az előző fejezetünkből a PiBBP kódunk futási idejét a 10 hatodik, hetedik és nyolcadik hatványaival.
+        </para>
+        <para>
+            A fenti forrásba a módosítandó kódrészletet tettem be. Tehát ebben a for ciklusban éppen 10 nyolcadik hatványával futtatjuk.
+        </para>
+        <para>
+            Nyolcadik hatvánnyal az én esetemben 205.641 mp alatt futott le a program. Alább beillesztettem egy képet a 3 eset futásáról java esetében.
+        </para>
+        
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/pibbp.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Ubuntu linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+    </section>  
+    
+    <section>
+        <title>Hello, Android!</title>
+        <para>
+            Élesszük fel az SMNIST for Humans projektet!
+            <link xlink:href="https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main">https://gitlab.com/nbatfai/smnist/tree/master/forHumans/SMNISTforHumansExp3/app/src/main</link>
+            Apró módosításokat eszközölj benne, pl. színvilág.
+        </para>
+        <para>
+            Megoldás forrása:  
+         
+            <programlisting language="java">
+                <![CDATA[
+                int[] bgColor =
+                {
+                        android.graphics.Color.rgb(0, 85, 128),
+                        android.graphics.Color.rgb(255, 255, 102)
+                };
+                ]]>
+            </programlisting>             
+        </para> 
+        <para>
+            Ezt a feladatot android studio-ban oldottam meg. Nem saját telefont, hanem szimulátort használtam a program kipróbálására.
+        </para>
+        <para>
+            A fenti kódrészletben láthatjuk azt a részt, ami a háttér színéért felel. Azért szerepel kétszer, mivel programunkban váltakoznak a színek.
+            Így kétféle színt beállítunk, aztán az fog váltakozni.
+        </para>
+        <para>
+            Az alábbi programkód-részben a gombok, betűk színét, annak háttereit tudjuk megváltoztatni.
+        </para>
+        <para>A setColor értelemszerűen a színét változtatja, ez esetben konkrét szín nevet adunk meg. (pl. BLUE, GRAY, RED, YELLOW stb.)</para>
+        <para>A setStyle a stílusát adja meg, azaz, hogy pl FILL_AND_STROKE - azaz legyen kitöltése és körvonala.</para>
+        <para>A setTextAlign maga a szöveg igazításáért felel (pl. CENTER, LEFT, RIGHT stb.)</para>
+        <para>A setTextSize pedig a szöveg méretéért, amit konkrét számmal adunk meg.</para>
+        <programlisting language="java">
+                <![CDATA[
+                textPaint.setColor(android.graphics.Color.GRAY);
+                textPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
+                textPaint.setAntiAlias(true);
+                textPaint.setTextAlign(android.graphics.Paint.Align.CENTER);
+                textPaint.setTextSize(55);
+
+                msgPaint.setColor(android.graphics.Color.GRAY);
+                msgPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
+                msgPaint.setAntiAlias(true);
+                msgPaint.setTextAlign(android.graphics.Paint.Align.LEFT);
+                msgPaint.setTextSize(40);
+
+                dotPaint.setColor(android.graphics.Color.BLUE);
+                dotPaint.setStyle(android.graphics.Paint.Style.FILL_AND_STROKE);
+                dotPaint.setAntiAlias(true);
+                dotPaint.setTextAlign(android.graphics.Paint.Align.CENTER);
+                dotPaint.setTextSize(50);
+
+                borderPaint.setStrokeWidth(2);
+                borderPaint.setColor(android.graphics.Color.RED);
+                fillPaint.setStyle(android.graphics.Paint.Style.FILL);
+                fillPaint.setColor(android.graphics.Color.BLUE);
+                ]]>
+            </programlisting> 
+        
+    </section>  
+
+    
+    <section>
+        <title>Ciklomatikus komplexitás</title>
+        <para>
+            Számoljuk ki valamelyik programunk függvényeinek ciklomatikus komplexitását! Lásd a fogalom
+            tekintetében a <link xlink:href="https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_2.pdf">https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_2.pdf</link> (77-79
+            fóliát)!
+        </para>
+        <para>
+            Megoldás forrása:   
+            <programlisting language="java">
+                <![CDATA[
+                class cyclomatic {
+                    public static void main(String args[]) {
+                        int A = 2, B = 5, C = 7;
+                        if (B > C) A = B;
+                        else A = C;
+
+                        System.out.println(A);
+                        System.out.println(B);
+                        System.out.println(C);
+                    }
+                }
+                ]]>
+            </programlisting>  
+        </para>
+        <para>
+            A ciklomatikus komplexitást Thomas J. McCabe alkotta. Emiatt nevéről, McCabe-komplexitásnak is nevezik.
+            Az alkotás maga egy szoftvermetrika, amely egy adott forráskód alapján meghatározza a forráskód komplexitását 
+            egy konkrét számértékben. Gráfelmélet alapján számít.
+        </para>
+        <para>
+            Az érték kiszámítása a következő módon történik:
+        </para>
+        <para>
+            M = E - N + 2P
+        </para>
+        <para>
+            Ahol E: a gráf éleinek száma, N: csúcsok száma, P: az összefüggő komponensek.
+        </para>
+        <para>
+            A képlet alapján, így, hogy tudjuk mi micsoda, mostmár mi is egyszerűen ki tudjuk számítani egy adott programkód komplexitását.
+        </para>
+        <para>
+            A következő példát <link xlink:href="https://www.tutorialspoint.com/software_testing_dictionary/cyclomatic_complexity.htm">innen</link> vettem.
+        </para>
+        <para>
+            Ahogy a linken is láthatjuk, esetünkben 8 csúcsunk, 7 élünk és 2*1 a komponens. Tehát: 8 - 7 + 2 = 3
+        </para>
+    </section>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
