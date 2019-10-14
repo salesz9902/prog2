@@ -1,0 +1,308 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Chomsky!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>Encoding</title>
+        <para>
+            Fordítsuk le és futtassuk a Javat tanítok könyv MandelbrotHalmazNagyító.java forrását úgy, hogy a
+            fájl nevekben és a forrásokban is meghagyjuk az ékezetes betűket!
+            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/adatok.html
+        </para>
+        <para>
+            Alapértelmezetten a fordítónk utf-8 encodinggal próbál fordítani, ez esetben nem jár sikerrel. Ugyanis ebben nem találhatóak meg bizonyos magyar 
+            ékezetes betűk, mint például az í, ő, ö, ű, ü betűk. Tehát ha szimplán fordítjuk (javac Mandelbrot.java) ezt a kimenetet kapjuk:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/errors.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            Ha azt szeretnénk, hogy a fent említett ékezetes karakterek is el legyenek fogadva egy másik kódolással kell próbálkoznunk. Például a 
+            cp1250 tartalmazza a fent említett karaktereket. Ezesetben: javac -encoding cp1250 Mandelbrot.java és máris hiba nélkül fordul a kódunk.
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/noerrors.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        </section>        
+
+        <section>
+            <title>OOCWC lexer</title>
+            <para>
+                Izzítsuk be az OOCWC-t és vázoljuk a https://github.com/nbatfai/robocaremulator/blob/master/justine/rcemu/src/carlexer.ll lexert és kapcsolását a programunk OO
+                struktúrájába!
+            </para>
+            <para>
+                Megoldás forrása:   
+            <programlisting language="c++">
+                    <![CDATA[
+                    %option c++
+                    %option noyywrap
+
+                    %{
+                    #define YY_DECL int justine::robocar::CarLexer::yylex()
+                    #include "carlexer.hpp"
+                    #include <cstdio>
+                    #include <limits>
+                    %}
+
+                    INIT	"<init"
+                    INITG	"<init guided"
+                    WS	[ \t]*
+                    WORD	[^-:\n \t()]{2,}
+                    INT	[0123456789]+
+                    FLOAT	[-.0123456789]+
+                    ROUTE	"<route"
+                    CAR	"<car"
+                    POS	"<pos"
+                    GANGSTERS	"<gangsters"
+                    STAT	"<stat"
+                    DISP	"<disp>"
+                    %% 
+                    ]]>
+            </programlisting>             
+        </para>
+        <para>
+            Lexerekkel találkozhattunk már a könyv 1. fejezetében is, viszont
+            itt egy kis rövid emlékeztetés a lexerekről:
+        </para>
+        <para>
+            A lexerek feladata, ahogy a nevéből (lexikális/nyelvi) kiolvasható,
+            szövegek elemzése, pontosabban olyan programok előállítása, amely adott
+            szabályok mellett, képes feldolgozni szöveges állományokat.
+        </para>
+         <para>
+            A lexerek, ahogy a nevéből is láthatjuk, szövegek elemzésésére, adott szabályok mellett, képes feldolgozni szöveges állományokat.
+        </para>
+        <para>
+            A fenti kód első része a definíciókból áll. Láthatjuk, hogy kódunk egy Carlexer osztályt fog létrehozni. Ez lesz maga a szövegelemző.
+        </para>
+        <para>
+            Ez utáni sorban már egy c++ kódcsipetet láthatunk, amely beincludolja nekünk a carlexer.hpp fájlt.
+        </para>
+        <para>
+            Ezután konstansokat hozunk létre, hogy ne legyen túl komplikáltnak tűnő a kód,
+            leolvasható, hogy valamilyen xml fájl lesz majd belőle, lesz feldolgozva.
+        </para>
+        <programlisting language='c++'>
+        <![CDATA[
+        {DISP}					{
+                                                  m_cmd = 0;
+                                                }
+        {POS}{WS}{INT}{WS}{INT}{WS}{INT}	{
+                                                  std::sscanf(yytext, "<pos %d %u %u", &m_id, &from, &to);
+                                                  m_cmd = 10001;
+                                                }
+        {CAR}{WS}{INT}				{
+                                                  std::sscanf(yytext, "<car %d", &m_id);
+                                                  m_cmd = 1001;
+                                                }
+        {STAT}{WS}{INT}				{
+                                                  std::sscanf(yytext, "<stat %d", &m_id);
+                                                  m_cmd = 1003;
+                                                }
+        {GANGSTERS}{WS}{INT}			{
+                                                  std::sscanf(yytext, "<gangsters %d", &m_id);
+                                                  m_cmd = 1002;
+                                                }
+        {ROUTE}{WS}{INT}{WS}{INT}({WS}{INT})*	{
+                                          int size{0};
+                                          int ss{0};
+                                          int sn{0};				  
+
+                                          std::sscanf(yytext, "<route %d %d%n", &size, &m_id, &sn);
+                                          ss += sn;
+                                          for(int i{0}; i<size; ++i)
+                                          {
+                                            unsigned int u{0u};
+                                            std::sscanf(yytext+ss, "%u%n", &u, &sn);
+                                            route.push_back(u);
+                                            ss += sn; 				    
+                                          }
+                                          m_cmd = 101;
+                                        }
+        {INIT}{WS}{WORD}{WS}("c"|"g")	{
+                                          std::sscanf(yytext, "<init %s %c>", name, &role);
+                                          num = 1;
+                                          m_cmd = 0;
+                                        }
+        {INIT}{WS}{WORD}{WS}{INT}{WS}("c"|"g")	{
+                                          std::sscanf(yytext, "<init %s %d %c>", name, &num, &role);
+                                          if(num >200)
+                                          {
+                                            m_errnumber = 1;
+                                            num = 200;
+                                          }
+                                          m_cmd = 1;
+                                        }				
+        {INITG}{WS}{WORD}{WS}("c"|"g")	{
+                                          std::sscanf(yytext, "<init guided %s %c>", name, &role);
+                                          num = 1;
+                                          m_guided = true;
+                                          m_cmd = 3;
+                                        }
+        {INITG}{WS}{WORD}{WS}{INT}{WS}("c"|"g")	{				  
+                                          std::sscanf(yytext, "<init guided %s %d %c>", name, &num, &role);
+                                          if(num >200)
+                                          {
+                                            m_errnumber = 1;
+                                            num = 200;
+                                          }
+                                          m_guided = true;
+                                          m_cmd = 2;
+                                        }								
+        .				{;}
+        %%
+        ]]>
+</programlisting>
+        <para>
+        A modulok előtt (blokk: lásd pl DISP) láthatjuk a korábban említett reguláris kifejezéseket, 
+            ha megegyeznek a minták a vizsgált bemenettel, akkor az adott modulban található utasítás fog végrehajtódni.
+        </para>
+        <para>
+        Tulajdonképpen a fent látható forráskódban szabályokat láthatunk. Ezek azért vannak, hogy a kapott információk után felhasználják,
+        és miután kielemezte, különböző típusokban hozzon létre valamilyen altípust.
+    </para>
+
+
+    </section> 
+    
+    <section>
+        <title>Paszigráfia Rapszódia OpenGL full screen vizualizáció</title>
+        <para>
+            Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, textúrázás, a szintek jobb
+            elkülönítése, kézreállóbb irányítás.
+        </para>
+        <para>
+            Megoldás forrása: 
+            <programlisting>
+                <![CDATA[
+                    glColor3f(0.818f,.900f,0.824f);
+                    glColor3f(0.818f,.900f,0.824f);
+                    glColor3f(0.818f,.900f,0.824f);
+                    glColor3f(0.818f,.900f,0.824f);
+                    glColor3f(.188f,0.209f,0.190f);
+                    glColor3f(.82f,.15f,.15f);
+                    glColor3f(.188f,0.209f,0.190f);
+                    glColor3f(0.15f,.29f,.82f);
+                ]]>
+            </programlisting>   
+        </para>
+        <para>
+            A Paszigráfia Rapszódia egy olyan mesterséges nyelv kialakítására törekvő
+            kezdeményezés, mely lehetővé teszi a homunkulusz és a mesterséges homunkulusz
+            közötti kommunikációt, ergó ez az esport kultúra nyelve.
+        </para>
+        <para>
+            Ahhoz, hogy programunk színvilágát módosítsuk, meg kell keresnünk a kódban a glColor3f(); sorokat. Amelynek paraméterként RGB formátumban 
+            vannak megadva a színek, tehát első számunk a piros, második a zöld, végül pedig a kék szín arányát láthatjuk. Lásd fent, megoldás forrásánál. 
+        </para>
+        <programlisting>
+                <![CDATA[
+                    glColor3f(0.818f,.900f,0.824f);
+                ]]>
+        </programlisting>   
+    </section>  
+    
+    <section>
+        <title>Paszigráfia Rapszódia LuaLaTeX vizualizáció</title>
+        <para>
+            Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, még erősebb 3D-s hatás.
+        </para>
+        <para>
+            Megoldás forrása:             
+        </para> 
+        <para>
+                A Paszigráfia Rapszódia, egy olyan 
+                mesterséges nyelv kialakítására törekvő kezdeményezés, mely lehetővé
+                teszi a homunkulusz és a mesterséges homunkulusz közötti kommunikációt,
+                ergó ez az esport kultúra nyelve.
+        </para>
+        
+    </section>  
+
+    
+    <section>
+        <title>Perceptron osztály</title>
+        <para>
+            Dolgozzuk be egy külön projektbe a projekt Perceptron osztályát!
+            Lásd https://youtu.be/XpBnR31BRJY
+        </para>
+        <programlisting>
+            <![CDATA[
+            #include <iostream>
+            #include "png++/png.hpp"
+            #include "ql.hpp"
+
+            using namespace std;
+            using namespace png;
+
+            int main ( int argc, char *argv[] )
+            {
+                image <rgb_pixel> png_image (argv[1]);
+                int size = png_image.get_width() * png_image.get_height();
+
+                Perceptron* p = new Perceptron(3, size, 256, 1);
+
+                double* image = new double[size];
+
+                for (int i{0}; i < png_image.get_width(); i++)
+                    for (int j{0}; j < png_image.get_height(); j++)
+                        image[i * png_image.get_width() + j] = png_image[i][j].red;
+
+                double value = (*p)(image);
+                cout <<" "<< value << endl;
+
+                delete p;
+                delete [] image;
+            }
+           ]]>
+        </programlisting>
+        <para>
+        <emphasis role='strong'>A feladat megoldásában Győri Márk Patrik tutorált!</emphasis>
+        </para>
+        <para>
+            A feladat elkészítéséhez szükségünk lesz értelemszerűen a perceptron osztályra, ami az nlp.hpp fájlban az első osztály. Ezt át kell tennünk 
+            egy másik header fájlba, ugyanis most csak azt fogjuk használni.
+        </para>
+        <para>
+            Feladat megoldásához szükségünk lesz a libpng12 és ennek dev változatára, illetve a png++ könyvtárra. A png++-t forráskódból fel tudjuk telepíteni.
+            Például innen tölthetjük le: <link xlink:href="http://download.savannah.nongnu.org/releases/pngpp/">http://download.savannah.nongnu.org/releases/pngpp/</link>
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/perceptron.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            Mint láthatjuk a programunk így is megfelelően működik. A kimenet.png fájlt a korábbi mandelbrot, szintén c++ programunkkal generáltam le.
+        </para>
+    </section>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
