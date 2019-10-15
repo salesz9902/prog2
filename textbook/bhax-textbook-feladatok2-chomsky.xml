@@ -181,7 +181,37 @@
         <para>
         Tulajdonképpen a fent látható forráskódban szabályokat láthatunk. Ezek azért vannak, hogy a kapott információk után felhasználják,
         és miután kielemezte, különböző típusokban hozzon létre valamilyen altípust.
-    </para>
+        </para>
+        <para>
+            Végül maga a docker futtatásához Molnár Antal dockerét használtam fel. Így könnyedén, sok időt spórolva beizzíthatjuk a projektet.
+            A környezet a következőképp néz ki:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/oocwc_in_browser.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        
+        <para>
+            Aztán, mint a következő képen látható, futtatásra tudjuk bírni a projektet:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/oocwc_docker.png" scale="60" />
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
 
 
     </section> 
