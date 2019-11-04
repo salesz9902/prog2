@@ -1,0 +1,310 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Stroustrup!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>JDK osztályok</title>
+        <para>
+            Írjunk olyan Boost C++ programot (indulj ki például a fénykardból) amely kilistázza a JDK összes
+            osztályát (miután kicsomagoltuk az src.zip állományt, arra ráengedve)!
+        </para>
+        <para>
+            Ebben a feladatban szükségünk lesz értelemszerűen a JDK-ra. Én a jdk-11-et telepítettem fel hozzá. Miután feltelepítettük 
+            a jdk mappájában lesz egy src.zip nevű állományunk, ezt kell kicsomagolnunk valahová. Konkrétan itt egy könyvtárbejárásről beszélünk. 
+            Tehát megszámoljuk, hogy hány darab .java fájlunk van a kibontott mappánkban lévő könyvtárakban.
+        </para>
+        <programlisting language='c'><![CDATA[
+        int main()
+        {
+                string pa = "/home/salesz/Downloads/src";
+                path apk_path(pa);
+                long long ennyimVan = 0;
+                recursive_directory_iterator end;
+                for (recursive_directory_iterator i(apk_path); i != end; ++i)
+                {
+                        const path cp = (*i);
+                        string name = cp.string();
+                        vector<string> strs;
+                        split(strs, name, is_any_of("\\"));
+                        string fName = strs[strs.size() - 1];
+
+                        if (fName.compare("module-info.java") == -1 && fName.compare("package-info.java") == -1) {
+                                if (ends_with(fName, ".java")) {
+                                        cout << " " << repeat(strs.size() - 7, "+") << " " << fName.substr(0, fName.size() - 5) << endl;
+                                        ++ennyimVan;
+                                }
+                                else
+                                {
+                                        cout << " | " << fName << " >" << endl;
+                                }
+                        }
+                }
+
+                cout << "JDK -> Ennyi osztalyom van: " << ennyimVan << endl;
+        }
+        ]]></programlisting>
+        <para>
+        <emphasis role='strong'>A feladathoz Győri Márk Patrik forráskódját használtam fel.</emphasis>
+        </para>
+        <para>
+            A forráskódban először is egy string változóban eltároljuk az elérési útunkat. Esetünkben ez a /home/salesz/Downloads/src
+            A long long típusú számláló mindig növekedik eggyel. A mappa bejárását a <function>recursive_directory_iterator</function> boost osztály végzi.
+            Ez az adott mappánk összes fájlján végig megy. 
+        </para>
+    </section>        
+
+    <section>
+        <title>Másoló-mozgató szemantika</title>
+        <para>
+            Kódcsipeteken (copy és move ctor és assign) keresztül vesd össze a C++11 másoló és a mozgató
+            szemantikáját, a mozgató konstruktort alapozd a mozgató értékadásra!
+        </para>
+            <programlisting language="c++"><![CDATA[LZWBinFa (LZWBinFa&& regi){
+                std::cout<< "LZWBinFa movetor" << std::endl;
+                *this = std:move(regi);]]>
+            </programlisting>
+            
+            <para>
+                Itt látható az std::move funkció, amely egy jobbérték referenciát ad vissza, ezzel "mozgatva" az objektumot.
+            </para>
+            
+            <programlisting language="c++"><![CDATA[LZWBinFa (const LZWBinFa& regi)
+            {
+                std::cout << "LZWBinFa copytor" << std::endl;
+                gyoker.ujEgyesGyerek (masol (regi.gyoker.egyesGyerek (), regi.fa));
+                gyoker.ujNullasGyerek (masol (regi.gyoker.nullasGyerek (), regi.fa));
+                if (regi.fa == & (regi.gyoker)){fa = &gyoker;}
+            }
+            }]]>
+            </programlisting>
+            <para>
+                Ez a másoló konstruktor,mely lemásolja a regi.fa-ban található nullás és egyes gyermekek-et, és az új fa-ba másolja azokat.
+            </para>
+
+            <programlisting language="c++"><![CDATA[LZWBinFa (const LZWBinFa& regi)
+            {
+            std::cout << "LZWBinFa masolo ertekadas" << std::endl;
+            szabadit (gyoker.egyesGyerek());
+            szabadit (gyoker.nullasGyerek());
+            gyoker.ujEgyesGyerek (masol (regi.gyoker.egyesGyerek (), regi.fa));
+            gyoker.ujNullasGyerek (masol (regi.gyoker.nullasGyerek (), regi.fa));
+            if (regi.fa == & (regi.gyoker)){fa = &gyoker;}
+            }
+            }]]>
+            </programlisting>
+            <para>
+                Ez pedig a másoló értékadás, amely nagyban hasonlít a konstruktoros megoldásra, csak annyi a különbség,hogy a másolás előtt 
+                felszabadítja az egyes- és nullásgyermek-et, Null-ra állítja értéküket.
+            </para>
+
+            <programlisting language="c++"><![CDATA[LZWBinFa (LZWBinFa&& regi)
+            {
+                        std::cout<< "LZWBinFa movetor" << std::endl;
+
+                        gyoker.ujEgyesGyerek (regi.gyoker.egyesGyerek());
+                        gyoker.ujNullasGyerek (regi.gyoker.nullasGyerek());
+
+                        regi.gyoker.ujEgyesGyerek(nullptr);
+                        regi.gyoker.ujNullasGyerek(nullptr);
+            }]]></programlisting>
+            
+            <para>
+                Különbség az eredeti "movetor"-hoz képest, hogy itt nem egy jobbérték referenciát ad vissza egy move függvény,
+                helyette az új fa gyokerének az új Egyes és Nullás gyermekei-t a régi gyökér nullás és egyes gyermekeire állítjuk be, 
+                majd a regi fa gyökerének gyermekeit beállítjuk, hogy nullpointerre mutassanak.
+            </para>
+    </section>
+        
+    
+    <section>    
+        <title>Hibásan implementált RSA törése</title>
+            <para>
+                Készítsünk betű gyakoriság alapú törést egy hibásan implementált RSA kódoló:
+                https://arato.inf.unideb.hu/batfai.norbert/UDPROG/deprecated/Prog2_3.pdf (71-73 fólia) által
+                készített titkos szövegen.
+            </para>
+            <para>Az encrypt függvény:</para>
+                <programlisting language="java"><![CDATA[
+                public BigInteger[] encript(String msg) {
+                byte[] buffer = msg.getBytes();
+                java.math.BigInteger[] priv = new java.math.BigInteger[buffer.length];
+                for (int i = 0 ; i < priv.length ; i++) {
+                priv[i] = new java.math.BigInteger(new byte[] {buffer[i]});
+                priv[i] = priv[i].modPow(this.e, this.n);
+                }
+                return priv;]]></programlisting><para>A BigInteger[] egy BigInteger tömb, ez a típus a java.math.BigInteger importálásával érhető el.
+                </para>
+                <programlisting language="java"><![CDATA[byte[] buffer = msg.getBytes();]]></programlisting><para>
+                Ez a sor létrehoz egy byte tömböt, amely a buffer névre hallgat.
+                Ez a buffer értékül kapja a <command>msg</command> string byte-sorozattá alakított változatát.
+                A sorozattá alakítás a platform alapértelmezett charset-ével történik.</para><para>
+                A következő sorban egy priv változót hozunk létre, amely szintén BigInteger tömb típusú lesz.
+                Ezután egy for ciklust indítunk, ami a priv változó összes elemén végigmegy, először az i-edik elemét egyenlővé teszi
+                egy új BigInteger-el, majd egy modulus exponenciális függvényt végez el azokon.
+                A <command>this.e</command> jelenti az exponenciális számot, míg a <command>this.n</command> a modulus-t. 
+                A pow-al szemben a modpow képes elvégezni a számítást akkor is, ha az exp negatív szám.
+                </para>
+                <programlisting language="java"><![CDATA[
+                        for (int i = 0 ; i < wrong_dm.length() ; i++) {
+                Character c;
+                if ( ( (c = contains(currentMap.get(wrong_dm.charAt(i)),m )) != null )) {
+                wrong_dm =wrong_dm.replace(wrong_dm.charAt(i), c);
+                currentMap.remove(wrong_dm.charAt(i));
+                }
+                ]]></programlisting>
+                <para>
+                    Itt látható a karakterek kicserélése a map-ban látott gyakoriságot követve, és ezzel létrejön a "tiszta, lefordított szöveg".
+                </para>
+                
+                <para>
+                    Látható, hogy a program egyfajta bruteforce metódusként üzemel azzal, hogy az RSA kódolás
+                    betűk helyett szavanként történt meg, ezért a betű előfordulási arány segítségével készíthető olyan program, amely az eredeti szöveg egy részét képes "lefordítani".
+                    Sajnos ez nem teljesen lehetséges, hiszen ha a betűk aránya a szövegben nem egyezik meg az online található statisztikával, akkor az betű-elcsúszásokhoz vezet, emiatt szinte lehetetlen a teljes decriptálás.
+                </para>
+                
+                <para>
+                    Látható viszont a felső képnél, hogy ha minden betűt sikeresen eltalál, onnan már egész egyszerű kitalálnunk az eredeti szót.
+                    Ha nem sikerült volna megfejteni a szót, amire gondoltam, a szó: <command>valami</command>
+                </para>
+                
+                <para>
+                    Ezen a képen látható, hogy az utolsó két sor szinte pofon-egyszerűen kitalálható a törést követően, na persze nem 100%-os a 
+                    törés, de egy pár futás után össze lehet illeszteni a szöveget.
+                </para>
+    </section>
+ 
+    
+     <section>
+        <title>Változó argumentumszámú ctor</title>
+        <para>
+            Készítsünk olyan példát, amely egy képet tesz az alábbi projekt Perceptron osztályának bemenetére és a Perceptron ne egy értéket, 
+            hanem egy ugyanakkora méretű „képet” adjon vissza. (Lásd még a 4 hét/Perceptron osztály feladatot is.)
+        </para>
+        <para>
+          A perceptron eddig csak egy értéket adott visssza, tehát ahhoz hogy egy úgymond "képet" kapjunk vissza, meg kell babrálnunk egy 
+            kicsit azt az osztályt. Ehhez 3 dolgot kell megváltoztani. Először gyorsan átírjuk az inicializálásnál a konstruktorban az 
+            utolsó argumentumot 1-ről <function>size</function>-ra, ami a kép területe.
+        </para>
+        <programlisting><![CDATA[Perceptron* p = new Perceptron (3, size, 256, size);]]>
+        </programlisting>
+        <para>
+          Ezután jön a lényeg, amit a zárójelek túlterhelésénél találunk, ugyanis így adjuk át a kép értékeit a perceptronnak (lásd: <function>double* value = (*p) (image);</function>). A visszatérési értéket <function>double*</function>-ra állítjuk, tehát mostmár az eredményunk ugyanolyan típusú mint ahogy kaptuk. De ez még nem elég, ugyanis eddig csupán az utolsó réteg első elemét adtuk vissza egy kicsit átszámolva, ami nekünk kevés egy kép megalkotásához. Ezért csak simán kitöröljük a függvényhívást és a második "[]" zárójeleket és visszakapjuk az utolsó réteget teljes egészében.
+        </para>
+        <programlisting><![CDATA[
+        double* operator() ( double image [] ) // <--------- valtozas itt
+        {
+            units[0] = image;
+            for ( int i {1}; i < n_layers; ++i )
+            {
+                #ifdef CUDA_PRCPS
+                cuda_layer ( i, n_units, units, weights );
+                #else
+                #pragma omp parallel for
+                for ( int j = 0; j < n_units[i]; ++j )
+                {
+                    units[i][j] = 0.0;
+                    for ( int k = 0; k < n_units[i-1]; ++k )
+                    {
+                        units[i][j] += weights[i-1][j][k] * units[i-1][k];
+                    }
+                    units[i][j] = sigmoid ( units[i][j] );
+                }
+                #endif
+            }
+            return units[n_layers - 1];//sigmoid ( units[n_layers - 1][0] ); <------- es itt
+        }]]>
+        </programlisting>
+        <para>
+          Összegezve: a mandelbrot halmazról készített kép vörös (red) értékeit átszámoltuk a perceptron osztállyal és most visszaírjuk azokat egy újonnan létrehozott kép (<function>png_image2</function>) red értékeibe. Ha az új kép kék és zöld értékeit az eredeti kép értékeivel pótoljuk, akkor annak egy elszínezett változatát kapjuk.
+        </para>
+        <para>
+          Ha viszont az előző eljárást alkalmazzuk mind a 3 színre, akkor először egy szinte teljesen fekete képet kapunk. Ez annak a következménye, hogy a perceptron által visszaadott értékek 0-nál kisebbek. De ha beszorozzuk őket 100-al, akkor egy ért\dekes kép rajzolódik ki.
+        </para>
+
+    </section>
+
+    
+    <section>
+        <title>Összefoglaló</title>
+        <para>
+            Az előző 4 feladat egyikéről írj egy 1 oldalas bemutató „”esszé szöveget!
+        </para>
+    </section>
+    
+    <section>
+        <title>Egyszerű string osztály</title>
+        <para>
+            Egy egyszerű string osztály elkészítését (hogy ne a verembe tegyük a kockászárójel megvalósítását, mert az nyilván odacsap az osztály értelmezésének.
+            A feladat leírása:  <link xlink:href="https://www.facebook.com/groups/udprog/permalink/1195321443989076/">itt</link> található.
+        </para>
+        <para>
+            <emphasis role='strong'>A feladatban Borviz Róbert tutorált. </emphasis>
+        </para>
+        <para>
+        <emphasis role='strong'>A feladathoz a fenti posztban lévő Borviz Róbert megoldását használtam. </emphasis>
+        </para>
+        <para>
+            Egyszerű string class, egy heapen foglalt memóriaterületre mutató pointert tartalmaz.
+        </para>
+        <programlisting><![CDATA[
+            char* data;
+            ]]>
+        </programlisting>
+        <para>
+            Mint láthatjuk, ez egy karakter pointer típusú privát adattag, ez a memóriaterület, ami a string számára van, első karakterére fog mutatni.
+        </para>
+        <para>
+            Itt pedig egy egyszerű operátort láthatunk a privát adattag elérésére:
+        </para>
+        <programlisting><![CDATA[
+            ostream & operator<< (ostream & os, const mystring & x)
+            {
+                return os << x.Data ();
+            }
+            ]]>
+        </programlisting>
+        <para>
+            Itt látható, hogy az output operátorunkat túlterheljük:
+        </para>
+        <programlisting><![CDATA[
+            char operator[](int i) {
+                size_t size = strlen(data)-1;
+                if( i > size ) { 
+                    cout << "Out of range" <<endl; 
+                }
+                char& ref = data[i];
+                return ref;
+            }
+        ]]>
+            
+        </programlisting>
+        
+        <para>
+            Az [] operátor túlterhelése, előszőr hibakezelés (azaz out of range figyelése), ha nagyobb indexű értékhez
+            szeretnénk hozzáférni mint amelyet ténylegesen tartalmaz a data pointer akkor, hibát jelzünk, ellenkező
+            esetben visszaadunk egy referenciát ami a megfelelő indexű karakterre mutat. Ezen a referencián keresztűl
+            tudjuk állítani az i-edik elem értékét.
+        </para>
+        <para>
+            Ez itt látható:
+        </para>
+        <programlisting><![CDATA[ 
+            mystring b ("almafa");
+            b[2] = ’v’;
+        ]]>
+            
+        </programlisting>
+        
+        <para>
+            Az operátor túlterhelésénél, azért a const kulcsszót használjuk, mert konstans objektumokra szeretnénk meghívni.
+            Itt is először hibakezelünk. Maga az operátor pedig az i-edik elem értékéről ad másolatot, amit nem módosíthatunk, mivel konstans.
+        </para>
+        
+    </section>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

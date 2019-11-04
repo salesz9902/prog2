@@ -1,0 +1,284 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Gödel!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+    <section>
+        <title>Gengszterek</title>
+        <para>
+            Gengszterek rendezése lambdával a Robotautó Világbajnokságban
+            https://youtu.be/DL6iQwPx1Yw (8:05-től)
+        </para>
+         <para>
+            A Robotautó Világbajnokság projekt a városi forgalomirányító algoritmusok tesztelésére, illetve az okos városok és a robotautók
+            között fennálló kapcsolat vizsgálatára jött létre.
+        </para>
+        <para>
+            A mi feladatunk a lambda kifejezések megértése, mely hasznunkra fog válni az elkövetkezendő feladatok során is.
+        </para>
+        <para>
+            A lambda kifejezések lehetőséget nyújtanak számunkra, hogy létrehozzunk egy névtelen függvényt, vagyis egy olyan konstrukciót, amely 
+            úgy viselkedik, mint egy függvény.
+        </para>
+        <para>
+            Ha általánosan kellene megfogalmazni: bárhol, ahol függvénymutatót használunk, használhatunk lambda kifejezéseket.
+            Azaz akkor használunk lambda kifejezéseket, ahol másképpen függvénymutatókat használnánk.
+        </para>
+        <para>
+            Például az <function>std::sort</function> STL függvény deklarációja
+            a következőképpen néz ki:
+        </para>
+        <programlisting language="c++">
+        <![CDATA[void sort()
+        template <class RandomAccessIterator>
+            void sort (RandomAccessIterator first, RandomAccessIterator last);
+        template <class RandomAccessIterator, class Compare>
+            void sort (RandomAccessIterator first, RandomAccessIterator last, Compare comp);]]>
+        </programlisting>
+        
+        <para>
+            A következő kódcsipet a Robotautó Világbajnokság projektből származik:
+        </para>
+        <programlisting language="c++">
+        <![CDATA[std::vector<Gangster> gangsters;
+        [...]
+        std::sort ( gangsters.begin(), gangsters.end(), [this, cop] ( Gangster x, Gangster y )
+        {
+            return dst ( cop, x.to ) < dst ( cop, y.to );
+        } );]]>
+        </programlisting>
+        <para>
+            Azt látjuk, hogy egy Gangster objektumokból álló vektort rendezünk. Ekkor megtehetnénk azt, hogy az osztályban felüldefináljuk
+            az operátort, vagy csinálhatjuk így is, lambda kifejezéssel. Itt a rendezés alapját a cop-tól, azaz a rendőrtől mért távolság adja, 
+            azaz azok az elemek kerülnek a vektor elejére, amelyek a rendőrhöz a legközelebb vannak.
+        </para>
+        </section>        
+
+        <section>
+            <title>C++11 Custom Allocator</title>
+        <para>
+            https://prezi.com/jvvbytkwgsxj/high-level-programming-languages-2-c11-allocators/ a
+            CustomAlloc-os példa, lásd C forrást az UDPROG repóban!
+        </para>
+        <para>
+            C++-ban az allokátorok szerepe, mint ahogyan a nevük is mutatja, hogy memóriát allokáljanak az adatszerkezeteink számára. Ugyan az
+            alapértelmezett allokátor. Megtehetjük, hogy sajátot írjunk, például egy vektorban tárolt értékek tárolására, a header ezt
+            tartalmazza:
+        </para>
+        <programlisting language="C++">
+        <![CDATA[template<
+            class T,
+            class Allocator = std::allocator<T>
+        > class vector;]]>
+        </programlisting>
+        <para>
+            Látható, hogy az Allocatornak van alapértelmezett értéke, de ezt felülírhatjuk.
+        </para>
+        <para>
+            A cél, hogy egy osztály minél kevesebb dologért feleljen. A memóriafoglalás mindig veszélyes, jobb ha ezt egy külön részre bontjuk.
+        </para>
+        <para>
+            Ezen kívül még van a template allokátor. Ilyen template-eket akkor használunk, amikor azt
+            szeretnénk elérni, hogy ugyan az a kód több típusra is működjön. Mivel példán keresztül könnyebb megmutatni, megpróbálom
+            így is. Jelen esetünkben a template használata nélkül a következőképpen kellene, hogy kinézzünk a kódunk:
+        </para>
+        <programlisting language="c++">https://www.facebook.com/groups/udprog/permalink/1231713563683197/
+        <![CDATA[struct CustomAllocInt {
+        using size_type = size_t;
+        using value_type = int;
+        using const_pointer = const int*;
+        using reference = int&;...]]>
+        </programlisting>
+        <programlisting language="c++">
+        <![CDATA[struct CustomAllocChar {
+        using size_type = size_t;
+        using value_type = char;
+        using const_pointer = const char*;
+        using reference = char&;...]]>
+        </programlisting>
+        <para>
+            Tehát a cél az, hogy minél kevesebbet kelljen írni. Ha nem használnánk ezt a templatet, akkor meg kéne írjuk ezt az allokátort
+            a létező összes típusra.
+        </para>
+        <para>
+            A program kimenete a következőképp néz ki:
+        </para>
+        <screen><![CDATA[$ g++ --std=c++17 CustomAlloc.cc && ./a.out
+        Allocating 1 object(s) of 4 bytes. i=int
+        Allocating 1 object(s) of 8 bytes. l=long
+        Allocating 1 object(s) of 32 bytes. NSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEE=std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >
+        ]]>
+        </screen>
+        <para>
+            Láthatjuk, hogy hány bájt megy el a foglalásokra, illetve hogy milyen típusból foglalunk. A string foglalásánál megjelenő típusnév
+            rövidítését és típusnevét az magyarázza, hogy az std::string egy osztály, amely eldönti, hogy milyen konkrét típussal dolgozzon.
+        </para>
+        </section> 
+    
+    <section>
+        <title>STL map érték szerinti rendezése</title>
+        <para>
+            Például: https://github.com/nbatfai/future/blob/master/cs/F9F2/fenykard.cpp#L180
+        </para>
+        <programlisting language="c++"><![CDATA[#include <iostream>
+            #include <map>
+             int main(void){
+             srand(time(NULL));
+             std::map<char, int> map;
+             std::map<int, char> sortedMap;
+             for(char c = 'a'; c <= 'd'; c++){
+            map.insert({c,(rand()% 100 + 0)});
+             }
+             std::cout << "unsorted numbers: " << std::endl;
+             for(auto const numb: map){
+             std::cout << numb.first << ": " << numb.second << std::endl;
+            sortedMap[numb.second] = numb.first;
+             }
+             std::cout <<std::endl <<"Sorted numbers: " << std::endl;
+             for(auto const numb: sortedMap)
+             std::cout << numb.second << ": " << numb.first << std::endl;
+             return 0;
+        }]]></programlisting>
+        <para>
+        A map-ek használatához szükségünk van a map library-re, ezek olyan tárolók, melyeknek van egy azonosítója(egy kulcs) és van egy értéke.
+        Két map rekordnak az azonosítója soha nem egyezik/egyezhet meg. 
+        </para>
+        <programlisting language="c++"><![CDATA[int main(void){
+            srand(time(NULL));
+            std::map<char, int> map;
+            std::map<int, char> sortedMap;
+        ]]>
+        </programlisting>
+        <para>
+            Először létrehozunk két map-et, az egyik tárolja majd a rendezetlen, a másik a rendezett számokat.
+            az std::map "paraméterei" a következők: az első, kacsacsőr utáni paraméter a kulcs érték típusa, a második param. pedig a map érték.
+            Így tehát az unsorted-map kulcsértéke char típusú lesz, és számokat tárol, a sortedMap kulcsértéke viszont már szám típusú, és 
+            karaktereket tárol.
+        </para>
+        
+        <programlisting language="c++"><![CDATA[for(char c = 'a'; c <= 'd'; c++){
+            map.insert({c,(rand()% 100 + 0)});
+         }]]>
+        </programlisting>
+        
+        <para> 
+            A deklarálás után feltöltjük az unsorted mapunkat. Ehhez egy for-ciklus lesz segítségünkre.
+        </para>
+        
+        <para>
+             A ciklus a-tól d-ig fog menni, és minden tick-ben insertel egy adatpárt a map-ba.
+             A map.instert szintaktikája a következő:
+        </para>
+        
+         <para>
+             <command>map_név.insert({kulcs,map_érték});</command>
+         </para>
+         <para>
+             A mapunk értékét randomizált 100-ig terjedő számokkal töltjük meg, a kulcs pedig a ciklus-változó értéke lesz.
+         </para>
+
+        <programlisting language="c++"><![CDATA[std::cout << "unsorted numbers: " << std::endl;
+            for(auto const numb: map){
+            std::cout << numb.first << ": " << numb.second << std::endl;
+           sortedMap[numb.second] = numb.first;
+         }]]>
+        </programlisting>
+         <para>
+            Harmadik lépésként kiíratjuk az unsorted-map értékpárosait, ezt is for-ciklus segítségével.
+            Észrevehetjük, hogy a for-ciklus szintaxisa nem éppen az előzőhöz hasonló.
+            Ezt a for ciklust range-based for-nak hívják.
+            ennek a szintaktikája a következő:
+         </para>
+         
+         <para>
+            Fontos tudni viszont, hogy a változónak azonos típusúnak kell lennie a map-ban levő érték típusával.
+            Mivel a mi esetünkben auto típust adtunk meg, ezért a típusmegválasztást a compiler-re hagyjuk, az pedig a map 
+            értékeit figyelembe véve választ majd típust.
+         </para>
+
+        <programlisting language="c++"><![CDATA[std::cout <<std::endl <<"Sorted numbers: " << std::endl;
+            for(auto const numb: sortedMap)
+            std::cout << numb.second << ": " << numb.first << std::endl;
+        ]]>
+        </programlisting>
+        <para>
+            Végül kiíratásra kerül a sortedMap tartalma, amely az előbbi ciklushoz hasonlóan zajlik.
+        </para>
+    </section>  
+    
+    <section>
+        <title>Alternatív Tabella rendezése</title>
+        <para>
+            Mutassuk be a https://progpater.blog.hu/2011/03/11/alternativ_tabella a programban a java.lang
+            Interface Comparable T szerepét!
+        </para>
+    </section>  
+
+    
+    <section>
+	<title>GIMP Scheme hack</title>
+	<para>Ha az előző félévben nem dolgoztad fel a témát (például a mandalás vagy a króm szöveges
+        dobozosat) akkor itt az alkalom!</para>
+	<para>
+            Írj olyan script-fu kiterjesztést a GIMP programhoz, amely név-mandalát készít a
+            bemenő szövegből!               
+        </para>
+        <para>
+            Megoldás videó: <link xlink:href="https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv">https://bhaxor.blog.hu/2019/01/10/a_gimp_lisp_hackelese_a_scheme_programozasi_nyelv</link>      
+        </para>
+        <para><command>A forráskód Bátfai Norbert tulajdonában áll.</command>
+            Megoldás forrása: <link xlink:href="https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Mandala">https://gitlab.com/nbatfai/bhax/tree/master/attention_raising/GIMP_Lisp/Mandala</link>               
+        </para>
+        <para>
+            A megszokott-tól eltérően a nyelvben nem infix alakban adjuk meg a műveleteket, hanem prefix alakban.
+        </para> 
+        <programlisting><![CDATA[(define (elem x lista)
+            (if (= x 1) (car lista) (elem (- x 1) ( cdr lista ) ) )
+        )]]>    
+        </programlisting> 
+        <para>
+            Mint láthatjuk, itt a define kulcsszóval lehet függvényeket inicializálni.
+            Ez a függvény az "elem" névre hallgat, és 2 paramétert kér be, az "x"-et és a "lista"-át.
+            Ha az x=1, akkor a (car lista) parancs hajtódik végre, ha nem, akkor pedig az (elem (x-1) (cdr lista)) parancs.
+            Ez miatt a sor miatt a függvény rekurzív lesz, hiszen addig hajta végre az "else" ágat, amíg az x!=1.
+            A car és cdr függvények a lista elején ill. végén lévő elemet adják vissza.
+        </para>
+        <programlisting><![CDATA[(define (text-width text font fontsize)
+            (let*
+                (
+                    (text-width 1)
+                )
+                (set! text-width (car (gimp-text-get-extents-fontname text fontsize PIXELS font)))    
+                text-width
+                )
+            )]]>
+        </programlisting>  
+        <para>
+            Ez a függvény a szöveg szélességét kezeli.
+            paraméterként bekéri a szöveget, a betűtípust és a betűméretet.
+            A függvény törzsében a megadott paraméterekkel a gimp beállítja a szöveg kinézetét.
+        </para>  
+        <programlisting><![CDATA[(define (script-fu-bhax-mandala text text2 font fontsize width height color gradient)
+        (let*
+          (]]>
+        </programlisting>
+        <para>
+            Ezen kezdetű függvény tekinthető a main fügvénynek, hiszen itt alkalmazzuk az előbb megadott függvényeket, itt írjuk a program érdemi részét.
+        </para>      
+        <programlisting><![CDATA[(gimp-image-insert-layer image layer 0 0)
+            (gimp-context-set-foreground '(0 255 0))
+            (gimp-drawable-fill layer FILL-FOREGROUND)
+            (gimp-image-undo-disable image) ]]>
+        </programlisting>
+        <para>
+            Az első sor beilleszt egy layert, a második sor beállítja annak háttérszínét zöldre, a harmadik sor kitölti a hátteret, az utolsó
+            sor pedig újra aktiválja a képet.
+        </para>
+
+	</section>
+
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                
