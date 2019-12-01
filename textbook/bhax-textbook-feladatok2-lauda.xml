@@ -1,0 +1,192 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Lauda!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+        <section>
+        <title>Port scan</title>
+        <para>
+            Mutassunk rá ebben a port szkennelő forrásban a kivételkezelés szerepére!
+            https://www.tankonyvtar.hu/hu/tartalom/tkt/javat-tanitok-javat/ch01.html#id527287
+        </para>
+        <programlisting language="java"><![CDATA[ 
+            public class KapuSzkenner {
+    
+            public static void main(String[] args) {
+
+                for(int i=0; i<1024; ++i)
+
+                    try {
+
+                        java.net.Socket socket = new java.net.Socket(args[0], i);
+
+                        System.out.println(i + " figyeli");
+
+                        socket.close();
+
+                    } catch (Exception e) {
+
+                        System.out.println(i + " nem figyeli");
+
+                    }
+            }
+
+        }
+        ]]> 
+        </programlisting>
+        <para>
+            A portszkennelés lényege, hogy kiderítsük, mennyi portunk van, ami használható.
+        </para>
+        <para>
+            A fent látható forráskód annyit tesz, hogy végigmegy 1024 kapun, megpróbál kapcsolatot létesíteni 
+            a <code>java.net.Socket</code> osztály segítségével egy socketet nyitni, ha ez sikerül, az azt jelenti, hogy a 
+            célporton van valamilyen szerver folyamat működésben. Azokat a kimeneteket kell figyelembe vennünk, ami portszám + figyeli
+            formában van jelen.
+        </para>
+        <para>
+            A java.net.Socket osztály dokumentációjában a következőt olvashatjuk:
+        </para>
+        <para>
+            SecurityException - if a security manager exists and its checkConnect method doesn't allow the operation.
+        </para>
+        <para>
+            Azaz ha nem tud rácsatlakozni, beleakad a fenti kivételbe, ezáltal nem engedélyezni az adott műveletet.
+        </para>
+        <para>
+            Az output a következőképp néz ki. Természetesen 1024-ig:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/portscan.png" scale="75"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+       </section>
+
+        <section>
+            <title>AOP</title>
+        <para>
+            Szőj bele egy átszövő vonatkozást az első védési programod Java átiratába! (Sztenderd védési
+            feladat volt korábban.)
+        </para>
+         <para>
+            Az aspektus orientált programozást (AOP) egy olyan szemlélet, amely
+            lehetőséget ad számunkra egy bizonyos kód módosítására, anélkül,
+            hogy a kódot módosítanánk. Lehetőségünk van például megadni
+            kódcsipeteket egy külön fájlban, amiknek megmondhatjuk, hogy
+            fussanak le az után, vagy előtt, amikor a programban például lefut
+            egy metódus.
+        </para>
+        <para>
+            Az AspectJ az AOP szemlélet Java-s kivetülése. Ezt a legtöbb
+            GNU/Linux disztribúción telepíthetjük a csomagkezelőnkkel. Ubuntu-n:
+        </para>
+        <programlisting>
+            <![CDATA[$ sudo apt install aspectj]]>
+        </programlisting>
+         <para>
+            Ha szeretnénk megszámlálni az egyesek és nullások számát a fában, de nem vagyunk elég ügyesek ahhoz, hogy
+            az <classname>LZWBinFa</classname> osztályt módosítsuk, segíteni fog az AspectJ, ahol úgynevezett pointcut-ok segítségével
+            megmondhatjuk, hogy mi történjen egy bizonyos metódus lefutása után.
+        </para>
+        <programlisting language="java">
+        <![CDATA[
+        public aspect Aspect {
+            private int ones = 0, zeros = 0;
+            
+            // Az addbit() pointcut -- hogy tudjuk számolni a bemenő adatokat
+            pointcut addbit(): execution(public void addBit(char));
+            
+            before(char b): addbit() && args(b) {
+                if ('1' == b)
+                    ++ones;
+                else if ('0' == b)
+                    ++zeros;
+            }
+            // A main() függvény pointcut -- hogy ki tudjuk írni a lefutás után az eredményt
+            pointcut main(): execution(public static void main(String[]));
+            
+            after(): main() {
+                System.out.println("ones = " + ones);
+                System.out.println("zeros = " + zeros);
+            }
+        }]]>
+        </programlisting>
+        <para>
+            A program futása:
+        </para>
+        <programlisting>
+        <![CDATA[
+            in = 01111001001001000111
+            melyseg = 4
+            atlag = 2.75
+            szoras = 0.9574271077563381
+            ones = 10
+            zeros = 10]]>
+        </programlisting>
+        
+        </section> 
+    
+    <section>
+        <title>Junit teszt</title>
+        <para>
+        A https://progpater.blog.hu/2011/03/05/labormeres_otthon_avagy_hogyan_dolgozok_fel_egy_pedat
+        poszt kézzel számított mélységét és szórását dolgozd be egy Junit tesztbe (sztenderd védési feladat
+        volt korábban).
+        </para>
+         <para>
+            Az úgynevezett unit tesztek lényege, hogy a kódok automatikusan tesztelhetőek legyenek. Ahelyett, hogy rengeteg időt töltenénk
+            minden egyes verzió kézi tesztelésével, úgynevezett unit teszteket hozunk létre, amik például minden egyes commit után (ha használunk
+            verziókövetőt, ami még az unit teszteknél is fontosabb) letesztelik az aktuális kódot előre megadott módon.
+        </para>
+        <para>
+            Élő példát ilyen tesztekre a Firefox Treeherder oldalán láthatunk:
+        </para>
+        <para>
+                <link xlink:href="https://treeherder.mozilla.org/#/jobs?repo=autoland">https://treeherder.mozilla.org/#/jobs?repo=autoland </link>
+        </para>
+        <para>
+            Természetesen ezek a tesztek nem helyettesítik teljesen a szoftver
+            kézi tesztelését, csupán lerövidítik, kiegészítik azt. Megnézhetjük
+            például a Firefox stratégiáját a következő oldalon:
+        </para>
+        <para>
+            <link xlink:href="https://developer.mozilla.org/en-US/docs/Mozilla/QA/Automated_testing">
+                https://developer.mozilla.org/en-US/docs/Mozilla/QA/Automated_testing
+            </link>
+        </para>
+        <para>
+            A JUnit a Java programnyelvhez létrehozott unit tesztelési megoldás. A használata: létrehozunk egy új osztályt, ahol
+            beimportáljuk a tesztelni kívánt kód osztályait, majd egy előre meghatározott szintaxissal megadjuk, hogy tesztelésnél milyen
+            eredményeket várunk. Tekintsük a következő példát a JUnit leírásából:
+            <link xlink:href="https://junit.org/junit5/docs/current/user-guide/#writing-tests">
+                https://junit.org/junit5/docs/current/user-guide/#writing-tests
+            </link>.
+        </para>
+        <para>Íme a példa: </para>
+         <programlisting language="java">
+        <![CDATA[
+        import static org.junit.jupiter.api.Assertions.assertEquals;
+        import example.util.Calculator;
+        import org.junit.jupiter.api.Test;
+        class MyFirstJUnitJupiterTests {
+            private final Calculator calculator = new Calculator();
+            @Test
+            void addition() {
+                assertEquals(2, calculator.add(1, 1));
+            } ]]>
+        </programlisting>
+         <para>
+            Látjuk, hogy importálásra kerül a Calculator osztály, és az addition() metódusban történik maga az összeshasonlítás, a 
+             calculator objektum (ami a Calculator osztály egy példánya) add() metódusát hívjuk 1-re és 1-re.
+        </para>
+    </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+</chapter>                

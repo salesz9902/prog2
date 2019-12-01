@@ -150,23 +150,6 @@
             </caption>
             
         </mediaobject>
-    </section>  
-
-    
-    <section>
-        <title>Tex UML</title>
-        <para>
-            Valamilyen TeX-es csomag felhasználásával készíts szép diagramokat az OOCWC projektről (pl.
-            use case és class diagramokat).
-        </para>
-        <para>
-            A feladat megoldásához a plantuml-t használtam. 
-            Ez pontosabban a plantuml nevezetű eclipse plugin, ami a kód beimportálása után generálja le modellünket a forráskódunkból.
-        </para>
-        <para>
-            Ez a generátor az OOCWC projektnél sajnos hamar hibát fog nekünk jelezni bármelyik osztály generálásánál. Hiszen valamiért az 
-            override miatt hibába fut.
-        </para>
     </section>
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

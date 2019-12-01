@@ -79,5 +79,21 @@
         </xi:fallback>
     </xi:include>
     
+    <xi:include href="bhax-textbook-feladatok2-lauda.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: bhax-textbook-motto.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>
+    
+    <xi:include href="bhax-textbook-feladatok2-calvin.xml">
+        <xi:fallback>
+            <para>
+                <emphasis>XInclude: bhax-textbook-motto.xml file not found</emphasis>
+            </para>
+        </xi:fallback>
+    </xi:include>
+    
             
 </part>  

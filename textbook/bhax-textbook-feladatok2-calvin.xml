@@ -1,0 +1,316 @@
+<chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
+    <info>
+        <title>Helló, Calvin!</title>
+        <keywordset>
+            <keyword/>
+        </keywordset>
+    </info>
+
+        <section>
+        <title>MNIST</title>
+        <para>
+            Az alap feladat megoldása, +saját kézzel rajzolt képet is ismerjen fel,
+            https://progpater.blog.hu/2016/11/13/hello_samu_a_tensorflow-bol Háttérként ezt vetítsük le:
+            https://prezi.com/0u8ncvvoabcr/no-programming-programming/
+        </para>
+        <para>
+            Tulajdonképpen az MNIST rövidítése nem más, mint: Modified National Institute of Standards and Technology, ami 
+            egy hatalmas adatbázis, ami rengeteg kézzel írott számjegyeket tartalmaz. Ez egy gyakran használt tanítható képfeldolgozó 
+            rendszer. Most pedig életre fogjuk kelteni, mégpedig úgy, hogy egy általunk rajzolt számjegyet is felismerjen a programunk.
+        </para>
+        <para>
+            Először is nézzük meg forráskódunkban a szükséges csomagokat, amiket telepítenünk kell ahhoz, hogy működésre tudjuk bírni a 
+            kódunkat. Ezeket könnyű felismerni, ezek az import kulcsszóval kezdődő sorok lesznek, pontosabban:
+        </para>
+        <programlisting language="python">
+            <![CDATA[
+                import keras
+                from keras.datasets import fashion_mnist 
+                from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
+                from keras.models import Sequential
+                from keras.utils import to_categorical,np_utils
+                from PIL import Image
+                import numpy as np
+                import matplotlib.pyplot as plt
+                import tensorflow as tf
+                import os
+            ]]>
+        </programlisting>
+        <para>
+            Tehát első körben szükségünk lesz a pip-re, amit könnyedén tudunk telepíteni. Fedora rendszeren a következőképpen:
+        </para>
+        <programlisting>
+            yum install python-pip
+        </programlisting>
+        <para>
+            Ha ezzel megvagyunk feltesszük a tensorflow-t, amit a következőképpen tehetünk meg a pip használatával:
+        </para>
+        <programlisting>
+            pip install tensorflow
+        </programlisting>
+        <para>
+            Aztán majd a a fent látható csomagokat külön feltelepítgetjük és meg is vagyunk:
+        </para>
+        <programlisting>
+            pip install keras
+            pip install matplotlib
+        </programlisting>
+        <para>
+            Ha ezzel megvagyunk máris fut a programunk...
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/mnist/mnist01.png" scale="60"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            Aztán fel is ugrik az első képünk, ami egy 7-es, és mint látjuk a terminálban, ezt jól is ismerte fel programunk:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/mnist/mnist02.png" scale="30"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            Aztán ugyanezt láthatjuk egy 2-essel, aztán egy általam rajzolt 8-as karakterrel, amit szintén sikeresen felismert:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/mnist/mnist03.png" scale="30"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/mnist/mnist04.png" scale="30"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            A teljes python forráskódot pedig itt láthatjuk:
+        </para>
+        <programlisting language="python">
+            <![CDATA[
+                import keras
+                from keras.datasets import fashion_mnist 
+                from keras.layers import Dense, Activation, Flatten, Conv2D, MaxPooling2D
+                from keras.models import Sequential
+                from keras.utils import to_categorical,np_utils
+                from PIL import Image
+                import numpy as np
+                import matplotlib.pyplot as plt
+                import tensorflow as tf
+                import os
+                (train_X,train_Y), (test_X,test_Y) = tf.keras.datasets.mnist.load_data()
+
+                train_X = train_X.reshape(-1, 28,28, 1)
+                test_X = test_X.reshape(-1, 28,28, 1)
+
+                train_X = train_X.astype('float32')
+                test_X = test_X.astype('float32')
+                train_X = train_X / 255
+                test_X = test_X / 255
+
+                train_Y_one_hot = to_categorical(train_Y)
+                test_Y_one_hot = to_categorical(test_Y)
+
+                model = Sequential()
+
+                model.add(Conv2D(64, (3,3), input_shape=(28, 28, 1)))
+                model.add(Activation('relu'))
+                model.add(MaxPooling2D(pool_size=(2,2)))
+
+                model.add(Conv2D(64, (3,3)))
+                model.add(Activation('relu'))
+                model.add(MaxPooling2D(pool_size=(2,2)))
+
+                model.add(Flatten())
+                model.add(Dense(64))
+
+                model.add(Dense(10))
+                model.add(Activation('softmax'))
+
+                model.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(),metrics=['accuracy'])
+
+                model.fit(train_X, train_Y_one_hot, batch_size=64, epochs=1)
+
+                test_loss, test_acc = model.evaluate(test_X, test_Y_one_hot)
+                print('Test loss', test_loss)
+                print('Test accuracy', test_acc)
+
+                predictions = model.predict(test_X)
+
+                print(np.argmax(np.round(predictions[0])))
+                plt.imshow(test_X[0].reshape(28, 28), cmap = plt.cm.binary)
+                plt.show()
+                print(np.argmax(np.round(predictions[1])))
+                plt.imshow(test_X[1].reshape(28, 28), cmap = plt.cm.binary)
+                plt.show()
+                img = Image.open('sajat8a.png').convert("L")
+                img = np.resize(img,(28,28,1))
+                im2arr = np.array(img)
+                im2arr = im2arr.reshape(1,28,28,1)
+                print(np.argmax(np.round(model.predict(im2arr))))
+                plt.imshow(im2arr[0].reshape(28,28),cmap = plt.cm.binary)
+                plt.show()
+            ]]>
+        </programlisting>
+       </section>
+    
+    <section>
+        <title>Android telefonra a TF objektum detektálója</title>
+        <para>
+            Telepítsük fel, próbáljuk ki!
+        </para>
+        <para>
+            A TensorFlow objektum dektektálóját könnyedén beszerezhetjük a következő linkről:
+        </para>
+        <para>
+            <link xlink:href="https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android">https://github.com/tensorflow/tensorflow/tree/master/tensorflow/examples/android</link>
+        </para>
+        <para>
+            Mint a neve is sugallja, ez a szoftver különböző objektumokat próbál detektálni/felismerni. Most pedig leteszteljük, mennyire végez 
+            jó munkát.
+        </para>
+        <para>
+            Miután leklónoztuk a fent linkelt repót, el is kezdhetjük telepíteni az apk fájlt. Ezen hamar, zökkenőmentesen túllehetünk, a telepítés 
+            a következőképp alakul, semmi bonyolult nincs benne, semmiféle plusz beállításra sincs szükség.
+        </para>
+         <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/tf_screenshots/install.jpg" scale="10"/>
+            </imageobject>
+            
+            <caption>
+                <para>Android Screenshot - TensorFlow telepítése</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            Miután feltelepítettük, megnyitjuk az alkalmazást, aztán engedélyezzük, hogy hozzáférjen az eszköz kamerájához, illetve fájljaihoz. Ezután pedig 
+            kezdődhet a felfedezés/tesztelés. Irányítsuk a kamerát különböző objektumokra (lehetőleg egyszerre csak egy látszódjon), és máris látjuk a felső kék 
+            sávban, hogy programunk minek ismeri fel az adott objektumot. Az én esetemben egész jól teljesített a program, 8 képből 6-ot helyesen felismert, így elmondhatom, 
+            hogy esetemben a program 75%-os pontossággal dolgozott. Ez egész jó szám. Képek a tesztelésről:
+        </para>
+        <mediaobject>
+            <imageobject>
+                    <imagedata fileref="../pictures/tf_screenshots/test01.jpg" scale="15"/>
+            </imageobject>
+
+            <caption>
+                <para>Android Screenshot - Első tesztek</para>
+            </caption>
+        </mediaobject>
+            
+        <mediaobject>
+            <imageobject>
+                    <imagedata fileref="../pictures/tf_screenshots/test02.png" scale="15"/>
+            </imageobject>
+
+            <caption>
+                <para>Android Screenshot - Tesztelés folytatása</para>
+            </caption>
+        </mediaobject>
+    </section>
+    <section>
+        <title>CIFAR-10</title>
+        <para>
+            Az alap feladat megoldása, +saját fotót is ismerjen fel,
+            https://progpater.blog.hu/2016/12/10/hello_samu_a_cifar-10_tf_tutorial_peldabol
+        </para>
+        <para>
+            Azt, hogy mik szükségesek a feladathoz, hogy futtatásra bírjuk, nem fogom mégegyszer leírni, előzőből láthatod részletesen kielemezve.
+            Ezt szintén virtuális környezettel fogom megoldani.
+        </para>
+        <para>
+            Első körben, mikor futtatjuk a programot, rengeteg adatot tölt le nekünk, most már egy jóval szívósabb adatbázisunk van, hiszen mostmár 
+            nem számokat, hanem képeket, ráadásul színes képeket fogunk felismertetni programunkkal. Szerintem érezhető a különbség. Itt láthatjuk, ahogy 
+            a programunk futtatás során elkezdi letölteni az adatokat, ami hosszabb időt is igénybe vehet:
+        </para>
+        <mediaobject>
+            <imageobject>
+                    <imagedata fileref="../pictures/cifar/cifardown.png" scale="65"/>
+            </imageobject>
+
+            <caption>
+                <para>Fedora Screenshot - cifar futtatása</para>
+            </caption>
+        </mediaobject>
+        
+        <para>
+            A cifar első futásánál elkezdi magát tanítani, ami még több idő, ugyanis 25 fázison keresztül megy végig 50.000-szer.
+            Ez akár órákba is telhet...
+        </para>
+        <para>
+            Pontosabban végigmenne 25 fázison, ha nem órán csinálnám a feladatot és nyúlnának hozzá a laptopomhoz a hallgató kollegák, na 
+            de sebaj... fussunk neki mégegyszer immár csak 5 próbálkozással. Egyébként a tanítások számát, hogy hány fázisban történjen a következő sorban 
+            tudjuk megadni, pontosabban az epochs változónk értéke a meghatározó:
+        </para>
+        <programlisting language="python">
+            <![CDATA[[
+                model.fit(train_X, train_Y_one_hot, batch_size=64, epochs=5)
+            ]]>
+        </programlisting>
+        <para>
+            Hát igen, ne is várjunk jó eredményeket 5 fázis után... Nos, 3 képből sajnos egyet sem ismert fel helyesen a programunk. 
+            Íme az eredmények:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/cifar/cifarcat.png" scale="30"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/cifar/airplane.png" scale="30"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/cifar/automobile.png" scale="30"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        
+    </section>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+</chapter>                

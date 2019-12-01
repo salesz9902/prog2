@@ -1,54 +1,199 @@
 <chapter xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xi="http://www.w3.org/2001/XInclude" version="5.0" xml:lang="hu">
     <info>
-        <title>Helló,!</title>
+        <title>Helló, unknown!</title>
         <keywordset>
             <keyword/>
         </keywordset>
     </info>
 
-    <section>
-        <title>FUTURE tevékenység editor</title>
-        <para>
-            Javítsunk valamit a ActivityEditor.java JavaFX programon!
-            https://github.com/nbatfai/future/tree/master/cs/F6
-            Itt láthatjuk működésben az alapot: https://www.twitch.tv/videos/222879467
-        </para>
-        <para>
-            Ebben a feladatban nincs nehéz dolgunk, valami kisebb módosítást nem nehéz véghezvinni ebben a kódban.
-        </para>
-        </section>
-
         <section>
             <title>OOCWC Boost ASIO hálózatkezelése</title>
-        <para>
-            Mutassunk rá a scanf szerepére és használatára! https://github.com/nbatfai/robocaremulator/blob/master/justine/rcemu/src/carlexer.ll
-        </para>
+            <para>
+                Mutassunk rá a scanf szerepére és használatára! https://github.com/nbatfai/robocaremulator/blob/master/justine/rcemu/src/carlexer.ll
+            </para>
+            <para>
+                Az std::sscanf adatok beolvasására alkalmas, egy null végződésű karakter string bufferből.
+            </para>
+            <para>
+            Az std::sscanf függvény:
+            </para>
+            <programlisting language="c++"><![CDATA[ 
+                int sscanf( const char* buffer, const char* format, ... );
+            ]]>
+            </programlisting>
+            <para>
+                buffer:
+            </para>
+            <para>
+                Mutató egy null végződésű karakter string-re, ahonnan olvasunk.
+            </para>
+            <para>
+                format:
+            </para>
+            <para>
+                Mutató egy null végződésű karakter string-re, ami azt határozza meg, hogy hogyan olvassuk az inputot.
+            </para>
+            <para>
+                Visszatérési érték:
+            </para>
+            <para>
+                Siker esetén egy int ami azt adja meg hogy hány argumentumot sikerült beolvasnunk. Input hiba esetén,
+                mielőtt bármit is beolvastunk volna, EOF- el tér vissza.
+            </para>
+            <para>
+                A pos-al kezdődik három int kell legyen benne és az értékek között nulla vagy több \t kell szerepeljen,
+                az ilyen szövegrészre fog illeszkedni a kifejezés, ha ilyen szövegrészt olvastunk akkor az utánna szereplő
+                kifejezés fog kiértékelődni:
+            </para>
+            <programlisting language="c++"><![CDATA[[
+                {
+                    std::sscanf(yytext, "<pos %d %u %u", &m_id, &from, &to);
+                    m_cmd = 10001;
+                } ]]>
+            </programlisting>
+            <para>
+                Itt pedig az std::sscanf függvényel yytext-ből, yytext tartalmazza azt a szövegrészt amire a lexer egyezést
+                talált, beolvassuk az értékeket m_id, from, és to-ba. Ezek a változók a carlexer.hpp állományban vannak
+                definiálva. Majd az m_cmd 10001-re állítjuk, ez a változó is a carlexer.hpp-ban található.
+            </para>
         </section> 
     
     <section>
         <title>SamuCam</title>
         <para>
-            Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a projektben:
-            https://github.com/nbatfai/SamuCam
+        Mutassunk rá a webcam (pl. Androidos mobilod) kezelésére ebben a projektben:
+        https://github.com/nbatfai/SamuCam
         </para>
+        <para>
+            <link xlink:href="https://github.com/opencv/opencv/blob/master/modules/videoio/include/opencv2/videoio.hpp">
+            https://github.com/opencv/opencv/blob/master/modules/videoio/include/opencv2/videoio.hpp</link>              
+        </para>
+        <programlisting language="c++"><![CDATA[
+            class SamuCam : public QThread
+            {
+                Q_OBJECT
+            public:
+                SamuCam ( std::string videoStream, int width, int height );
+                ~SamuCam();
+            void openVideoStream();]]>
+        </programlisting>
+        <para>
+            Az opencv segítségével képes a program a kamera használatára, a SamuCam osztály egy QThread objektumot képvisel,
+            ezen belül található az openVideoStream, melyet majd a felvétel kezeléséhez használunk a <command>cv::VideoCapture videoCapture;</command> 
+            segítségével.
+        </para>
+        <programlisting language="c++"><![CDATA[void SamuCam::openVideoStream()
+        {
+          videoCapture.open ( videoStream );
+          videoCapture.set ( CV_CAP_PROP_FRAME_WIDTH, width );
+          videoCapture.set ( CV_CAP_PROP_FRAME_HEIGHT, height );
+          videoCapture.set ( CV_CAP_PROP_FPS, 10 );
+        }]]></programlisting>
+        <para>
+            Itt láthatjuk az openVideoStream felhasználását.
+            a videoCapture.open indítja el a felvételt, paraméterként pedig egy fájlnevet kap meg.
+            A metódus először hívja a <command>VideoCapture::release</command>-t, ha a felvétel már folyamatban van.
+        </para>
+        <para>Alatta beállítjuk a felvétel szélességét és magasságát, valamint az fps rátát.</para>
+        <para>
+            Igen ám, el is jutottam a program felélesztéséhez, de sajnos valahogy mégsem sikerült elérnem, hogy működő kamerán keresztül kapjam 
+            az adatokat vissza. Ha alapértelmezett kamerát szeretnénk használni (pl. a laptop kameráját), akkor a fent látható videoCapture.open()-nek 
+            videoStream helyett 0 értéket kell megadnunk. Ha pedig mondjuk a telefonunkra letöltött bármilyen IP Cam alkalmazással szeretnénk elérni a kamera működését, 
+            maradhat a videoStream paraméter. Ez esetben futtatásnál egy --ip opcióval megadjuk az ip kameránk ip címét, és ha minden jól megy, működnie kell.
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/samucam.png" scale="35"/>
+            </imageobject>
+            
+            <caption>
+                <para>Screenshot a SamuCam futtatásáról, kamera nélkül...</para>
+            </caption>
+            
+        </mediaobject>
     </section>  
     
     <section>
         <title>BrainB</title>
         <para>
-            Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: https://github.com/nbatfai/esporttalent-search
-        </para>
-    </section>  
-
-    
-    <section>
-        <title>OSM térképre rajzolása</title>
+            Mutassuk be a Qt slot-signal mechanizmust ebben a projektben: https://github.com/nbatfai/esport-talent-search</para>
+            
+            <para>
+                A program 10 percig fut, ezalatt az idő alatt az a feladatunk hogy a bal egérgombot lenyomva Samu Entropy-
+                n tartsuk az egeret. A program futás közben statisztikát készít az eredményeinkről amit a program végezté-
+                vel megtekinthetünk.
+                A program Qt segítségével van elkészítve, ami egy keresztplatformos alkalmazás-keretrendszer, amit GUI-s
+                alkalmazások, illetve nem GUI-s programok fejlesztésére használnak.
+            </para>
+            <para>
+                Ismertebb alkalmazások és felhasználók közé tartozik, amiknek fejlesztéséhez Qt-t használtak pl. az Autodesk, Google Earth, KDE, Skype, VLC media player, 
+                VirtualBox, Mathematica stb. Hivatalosan Linux, Mac OS, Windows és Symbian platformokat támogat.
+            </para>
+            <para>
+                A Qt részletes leírása ezen a linken megtalálható: <link xlink:href="https://hu.wikipedia.org/wiki/Qt">https://hu.wikipedia.org/wiki/Qt</link>
+            </para>
+            <para>
+                A Qt innen tölthető le: <link xlink:href="https://www.qt.io/">https://www.qt.io/</link>
+            </para>
+            <para>
+                A program használatához a következők telepítése a szükséges:
+            </para>
+            <programlisting>
+            sudo dnf install libqt4-devel
+            sudo dnf install opencv
+            sudo dnf install opencv-devel
+            </programlisting>
+        <programlisting language="c++"><![CDATA[BrainBWin::BrainBWin ( int w, int h, QWidget *parent ) : QMainWindow ( parent )
+        {
+        //    setWindowTitle(appName + " " + appVersion);
+        //    setFixedSize(QSize(w, h));
+                statDir = appName + " " + appVersion + " - " + QDate::currentDate().toString() + QString::number ( QDateTime::currentMSecsSinceEpoch() );
+                brainBThread = new BrainBThread ( w, h - yshift );
+                brainBThread->start();
+                connect ( brainBThread, SIGNAL ( heroesChanged ( QImage, int, int ) ),
+                          this, SLOT ( updateHeroes ( QImage, int, int ) ) );
+                connect ( brainBThread, SIGNAL ( endAndStats ( int ) ),
+                          this, SLOT ( endAndStats ( int ) ) );
+        }
+        ]]></programlisting>
         <para>
-            Debrecen térképre dobjunk rá cuccokat, ennek mintájára, ahol én az országba helyeztem el a DEAC
-            hekkereket: https://www.twitch.tv/videos/182262537 (de az OOCWC Java Swinges
-            megjelenítőjéből: https://github.com/nbatfai/robocar-emulator/tree/master/justine/rcwin is
-            kiindulhatsz, mondjuk az komplexebb, mert ott időfejlődés is van...)
+            Ez a slot-signal mechanizmus az objektumok közötti kommunikációt teszi lehetővé.
+            Ez a meta-object rendszer segítségével lehetséges.
         </para>
+        <para>
+            Más keretrendszerek callback funkciójához hasonlóan működik,viszont a callback-el ellentétben ez a mechanizmus nem küszködik típus-tartási 
+            hibákkal, hiszen csak akkor hajtódik végre a slot-ban helyetfoglaló függvény, ha a jel típusa megegyezik a slot-ban várt típussal.
+            A slotban található funkció virtuálisként is definiálható, és teljes mértékben egy normál funkcióval megegyező függvény található a slotban.
+            Tehát ha a heroesChanged függvény végrehajtódik, akkor egy jel küldődik az updateHeroes slotba, és ezzel az updateHeroes függvény is 
+            végrehajtásra kerül.
+        </para>
+        <para>
+            Program futását a Qt letöltése után tudjuk elérni, mégpedig az én esetemben a saját home mappámba mentettem, tehát megadjuk az elérési útat, aztán 
+            így "qmake"-eljuk a BrainB.pro fájlt, ezután make, aztán futtatjuk a keletkezett futtatható BrainB fájlt. Két kép a program futásáról:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/brainb_samu.png" scale="35"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/brainb_samu2.png" scale="40"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
     </section>
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

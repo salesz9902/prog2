@@ -207,15 +207,7 @@
         <para>
             Végül kiíratásra kerül a sortedMap tartalma, amely az előbbi ciklushoz hasonlóan zajlik.
         </para>
-    </section>  
-    
-    <section>
-        <title>Alternatív Tabella rendezése</title>
-        <para>
-            Mutassuk be a https://progpater.blog.hu/2011/03/11/alternativ_tabella a programban a java.lang
-            Interface Comparable T szerepét!
-        </para>
-    </section>  
+    </section>
 
     
     <section>

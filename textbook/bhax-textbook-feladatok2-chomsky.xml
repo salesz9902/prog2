@@ -251,24 +251,7 @@
                     glColor3f(0.818f,.900f,0.824f);
                 ]]>
         </programlisting>   
-    </section>  
-    
-    <section>
-        <title>Paszigráfia Rapszódia LuaLaTeX vizualizáció</title>
-        <para>
-            Lásd vis_prel_para.pdf! Apró módosításokat eszközölj benne, pl. színvilág, még erősebb 3D-s hatás.
-        </para>
-        <para>
-            Megoldás forrása:             
-        </para> 
-        <para>
-                A Paszigráfia Rapszódia, egy olyan 
-                mesterséges nyelv kialakítására törekvő kezdeményezés, mely lehetővé
-                teszi a homunkulusz és a mesterséges homunkulusz közötti kommunikációt,
-                ergó ez az esport kultúra nyelve.
-        </para>
-        
-    </section>  
+    </section>
 
     
     <section>
