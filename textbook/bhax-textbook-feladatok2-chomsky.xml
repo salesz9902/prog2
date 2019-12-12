@@ -294,6 +294,11 @@
         <emphasis role='strong'>A feladat megoldásában Győri Márk Patrik tutorált!</emphasis>
         </para>
         <para>
+            A gépi tanulásban a perceptron egy algoritmus, a bináris osztályozás tanítására. A bináris osztályozás azt
+            jelenti, hogy az osztályozandó elemeket két részre osztjuk pl.: vagy benne van valami egy adott osztályban
+            vagy nincs. A következo programban ilyen algoritmust fogunk használni.
+        </para>
+        <para>
             A feladat elkészítéséhez szükségünk lesz értelemszerűen a perceptron osztályra, ami az nlp.hpp fájlban az első osztály. Ezt át kell tennünk 
             egy másik header fájlba, ugyanis most csak azt fogjuk használni.
         </para>
@@ -305,6 +310,21 @@
             
             <imageobject>
                 <imagedata fileref="../pictures/perceptron.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>
+        <para>
+            A program futtatásakor az előző Perceptron programunk által generált kimenet.png-t használom fel.
+            Ami az alábbi kép:
+        </para>
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/kimenet.png" scale="40"/>
             </imageobject>
             
             <caption>

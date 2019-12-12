@@ -225,6 +225,14 @@
             A Yoda condition egy programozási stílus, elnevezését az ismert Star Wars szereplője, Yoda nem-szabványos beszéde adta. Ez programunkban 
             úgy észlelhető, hogy például egy if-ben a feltételünk bal oldalára írjuk az értéket. (ld. megoldás forrásánál)
         </para>
+        <para>
+            A fenti kódcsipetemben egy pici "easter egg"-et is elhelyeztem, ez pedig a zöld fénykardnak a színkódja, hiszen Yodának is zöld színű a fénykardja, 
+            csak betűk nélkül, tehát 2FF923 => 2923.
+        </para>
+        <para>
+            Ahogy fent is írtam, Yoda furcsa, nem szabványos beszéde miatt kapta erről a nevét. Hiszen ez is ilyen nem szabványos módszer, amire persze fordításkor 
+            hibát is kapunk.
+        </para>
     </section>  
 
     
@@ -237,6 +245,87 @@
         <para>
             Megoldás forrása:              
         </para>
+        <programlisting language="java">
+            <![CDATA[
+                    public class PiBBPBench {
+                    public static double d16Sj(int d, int j) {
+
+                        double d16Sj = 0.0d;
+
+                        for(int k=0; k<=d; ++k)
+                            d16Sj += (double)n16modk(d-k, 8*k + j) / (double)(8*k + j);
+
+                        /* (bekapcsolva a sorozat elejen az első utáni jegyekben növeli pl.
+                            a pontosságot.)
+                        for(int k=d+1; k<=2*d; ++k)
+                            d16Sj += Math.pow(16.0d, d-k) / (double)(8*k + j);
+                         */
+
+                        return d16Sj - Math.floor(d16Sj);
+                    }
+                    public static long n16modk(int n, int k) {
+
+                        int t = 1;
+                        while(t <= n)
+                            t *= 2;
+
+                        long r = 1;
+
+                        while(true) {
+
+                            if(n >= t) {
+                                r = (16*r) % k;
+                                n = n - t;
+                            }
+
+                            t = t/2;
+
+                            if(t < 1)
+                                break;
+
+                            r = (r*r) % k;
+
+                        }
+
+                        return r;
+                    }
+                    public static void main(String args[]) {
+
+                        double d16Pi = 0.0d;
+
+                        double d16S1t = 0.0d;
+                        double d16S4t = 0.0d;
+                        double d16S5t = 0.0d;
+                        double d16S6t = 0.0d;
+
+                        int jegy = 0;
+
+                        long delta = System.currentTimeMillis();
+
+                        for(int d=100000000; d<100000001; ++d) {
+
+                            d16Pi = 0.0d;
+
+                            d16S1t = d16Sj(d, 1);
+                            d16S4t = d16Sj(d, 4);
+                            d16S5t = d16Sj(d, 5);
+                            d16S6t = d16Sj(d, 6);
+
+                            d16Pi = 4.0d*d16S1t - 2.0d*d16S4t - d16S5t - d16S6t;
+
+                            d16Pi = d16Pi - Math.floor(d16Pi);
+
+                            jegy = (int)Math.floor(16.0d*d16Pi);
+
+                        }
+
+                        System.out.println(jegy);
+                        delta = System.currentTimeMillis() - delta;
+                        System.out.println(delta/1000.0);
+                    }
+                }
+            ]]>
+        </programlisting>
         <para>
             Ebben a példában Bátfai Tanár Úr kódját használtam, időhiány miatt.
         </para>
@@ -245,12 +334,51 @@
             1995-ben lett felfedezve, 1996-ban publikálva.
         </para>
         <para>
+            A BBP algoritmus a pí értékének, valamint n. jegyeinek gyors kiszámítására született algoritmus. Az első programmagát a Pí szám értékét fogja kiszámítani,
+            míg a második képes lesz az n. helyiértéken álló szám hexadecimális értékének megmondására.
+        </para>
+        <para>
             Tetszőleges kiindulási helyzetből indulva bináris és hexadecimális számjegyeit számolja ki Pi-nek.
         </para>
         <para>
             <link xlink:href="https://www.davidhbailey.com//dhbpapers/bbp-alg.pdf">Eme tudományos közlemény</link> 
             segít megérteni a BBP algoritmus működését, és ennek segítségével sokkal gördülékenyebben megírhatjuk programunkat.
         </para>
+        <programlisting language="java">
+            <![CDATA[
+                public static double d16Sj(int d, int j) {
+        
+                    double d16Sj = 0.0d;
+
+                    for(int k=0; k<=d; ++k)
+                        d16Sj += (double)n16modk(d-k, 8*k + j) / (double)(8*k + j);
+
+                    /* (bekapcsolva a sorozat elejen az első utáni jegyekben növeli pl.
+                        a pontosságot.)
+                    for(int k=d+1; k<=2*d; ++k)
+                        d16Sj += Math.pow(16.0d, d-k) / (double)(8*k + j);
+                     */
+
+                    return d16Sj - Math.floor(d16Sj);
+                }
+            ]]>
+        </programlisting>
+        <para>
+            Programunkban a végső számítást a fent látható d16Sj nevezetű függvény fogja végezni, amely 2 bemenetet vár. Ez a függvényünk gyakorlatilag 
+            az alábbi képlet alapján számol, amit a fenti linken láthatunk részletesen kielemezve:
+        </para>
+        
+        <mediaobject>
+            
+            <imageobject>
+                <imagedata fileref="../pictures/keplet.png"/>
+            </imageobject>
+            
+            <caption>
+                <para>Fedora linux screenshot</para>
+            </caption>
+            
+        </mediaobject>   
     </section>
 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         

@@ -23,6 +23,11 @@
                 van jelen. Segíti az együttműködést, bizonyos dolgok felvázolását, könyebbé téve annak megérthetőségét. 
             </para>
             <para>
+                Az UML specifikációja viszonylag nagy terjedelmű. Az osztálydiagrammok jelölésének rendszere a következőképp néz ki: van egy három részre bontott
+                téglalapunk, a legfelső részben az osztály neve van.  A következő részben a mezők, majd alattuk a metódusok találhatók. A publikus
+                adattagok jelölője a +, a priváté a -, a protected láthatóságú adattagokat pedig a # azonosítja.
+            </para>
+            <para>
                 Ebben a feladatban a jó öreg binfa programunkat fogjuk lemodellezni UML-ben. Ehhez az Eclipse UML-t fogom használni, amely képes 
                 osztálydiagramot generálni programkódunkból.
             </para>
@@ -62,6 +67,33 @@
             </caption>
             
         </mediaobject>
+        
+        <para>
+            Bár nem egy nagy durranás, de azért itt hagyom a generált forráskódot is:
+        </para>
+        
+        <programlisting language="java">
+            <![CDATA[[ 
+                class test_class {
+
+                public static double terulet_szamitas(double a, double b, double c) {
+                    return a*b*c;
+                }
+
+                public static double kerulet_szamitas(double a, double b, double c) {
+                    return a+b+c;
+                }
+                public static void main(String[] args) {
+                    double a_oldal = 3;
+                    double b_oldal = 4;
+                    double c_oldal = 5;
+
+                    terulet_szamitas(a_oldal, b_oldal, c_oldal);
+                    kerulet_szamitas(a_oldal, b_oldal, c_oldal);
+                    }
+                }
+            ]]>
+        </programlisting>
     </section> 
     
     <section>

@@ -269,6 +269,12 @@
             </programlisting>  
         </para>
         <para>
+            A ciklomatikus komplexitás a forráskódot jellemző tulajdonság, azt
+            mondja meg, hogy egy adott programban hány lineárisan független út
+            található egy programban. Lefordítva, hogy hány féle képpen mehet a
+            vezérlés a program kezdetétől a végéig.
+        </para>
+        <para>
             A ciklomatikus komplexitást Thomas J. McCabe alkotta. Emiatt nevéről, McCabe-komplexitásnak is nevezik.
             Az alkotás maga egy szoftvermetrika, amely egy adott forráskód alapján meghatározza a forráskód komplexitását 
             egy konkrét számértékben. Gráfelmélet alapján számít.
